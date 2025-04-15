@@ -125,14 +125,14 @@ export const updateReplacement = async (req, res) => {
 export const deleteReplacement = async (req, res) => {
   const replacementId = req.params.id;
 
-  const maintenance = await maintenanceModel.getMaintenanceById(replacementId);
+  const replacement = await replacementModel.getReplacementById(replacementId);
 
-  if (!maintenance) {
-    res.status(404).send("Maintenance not found");
+  if (!replacement) {
+    res.status(404).send("Replacement not found");
     return;
   }
 
-  const deleted = await maintenanceModel.deleteMaintenance(maintenanceId);
+  const deleted = await replacementModel.deleteReplacement(replacementId);
 
   if (!deleted) {
     res.status(500).send("Internal Server Error");

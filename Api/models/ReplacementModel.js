@@ -63,9 +63,9 @@ export const updateReplacement = async (id, replacementData) => {
  * @param {Number} id id of the replacement to delete
  * @returns {Boolean} true if deleted, false if not found
  */
-export const deleteMaintenance = async (id) => {
+export const deleteReplacement = async (id) => {
   const result = await db.query(
-    "DELETE FROM maintenance WHERE maintenance_id = $1 RETURNING *",
+    "DELETE FROM replacement WHERE replacement_id = $1 RETURNING *",
     [id],
   );
   return result.rowCount > 0; // Returns true if a row was deleted
