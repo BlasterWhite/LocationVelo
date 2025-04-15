@@ -53,7 +53,7 @@ export const createBicycle = async (bicycleData) => {
       last_km_service,
       status,
       electric_assistance,
-    ]
+    ],
   );
   return result.rows[0];
 };
@@ -91,7 +91,7 @@ export const updateBicycle = async (id, bicycleData) => {
       status,
       electric_assistance,
       id,
-    ]
+    ],
   );
   return result.rows[0]; // Return the updated bicycle
 };
@@ -104,7 +104,7 @@ export const updateBicycle = async (id, bicycleData) => {
 export const deleteBicycle = async (id) => {
   const result = await db.query(
     "DELETE FROM bicycle WHERE bicycle_id = $1 RETURNING *",
-    [id]
+    [id],
   );
   return result.rowCount > 0; // Returns true if a row was deleted
 };
