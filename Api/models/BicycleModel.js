@@ -62,7 +62,7 @@ export const createBicycle = async (bicycleData) => {
  *  Update a bicycle by its id (Merge with existing data)
  * @param {Number} id id of the bicycle to update
  * @param {Object} bicycleData object containing the updated bicycle data
- * @returns
+ * @returns {Object} the updated bicycle
  */
 export const updateBicycle = async (id, bicycleData) => {
   const {

@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import db from "./config/db.js";
 import bicycleRouter from "./routes/BicycleRoute.js";
+import maintenanceRouter from "./routes/MaintenanceRoute.js";
+import replacementRouter from "./routes/ReplacementRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,8 +17,10 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/bicycles", bicycleRouter);
+app.use("/api/maintenance", maintenanceRouter);
+app.use("/api/replacements", replacementRouter);
 
-db.connect((err) => {
+db.connect((err) => { 
   if (err) {
     console.error("Database connection error:", err);
     return;
