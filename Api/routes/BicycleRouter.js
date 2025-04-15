@@ -5,7 +5,7 @@ import {
   createBicycle,
   updateBicycle,
   deleteBicycle,
-} from "../controllers/Bicycles.js";
+} from "../controllers/BicycleController.js";
 
 const router = express.Router();
 
