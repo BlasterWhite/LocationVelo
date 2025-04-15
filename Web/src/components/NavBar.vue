@@ -1,9 +1,22 @@
 <script setup>
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/authStore";
-const authStore = useAuthStore(); // Initialize the store
+const authStore = useAuthStore();
+import { useFloating } from "@floating-ui/vue";
 
 const { token, isAuthenticated, user } = storeToRefs(authStore);
+
+const userIcon = ref(null);
+const floatingMenu = ref(null);
+const showFloatingMenu = ref(false);
+const { floatingStyles: floatingMenuStyle } = useFloating(
+  userIcon,
+  floatingMenu,
+  {
+    placement: "bottom-left",
+  },
+);
 </script>
 
 <template>
@@ -23,8 +36,46 @@ const { token, isAuthenticated, user } = storeToRefs(authStore);
       <router-link to="/debug">A propos</router-link>
     </div>
     <div class="right">
-      <v-icon icon="mdi mdi-account-circle-outline" size="x-large"></v-icon>
+      <v-icon
+        ref="userIcon"
+        @click="showFloatingMenu = !showFloatingMenu"
+        icon="mdi mdi-account-circle-outline"
+        size="x-large"
+      ></v-icon>
     </div>
+  </div>
+  <div
+    v-if="showFloatingMenu"
+    ref="floatingMenu"
+    class="floating-menu"
+    :style="floatingMenuStyle"
+    style="z-index: 999"
+  >
+    <v-list v-if="isAuthenticated">
+      <v-list-item @click="showFloatingMenu = false">
+        <v-list-item-title>Mon Compte</v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="showFloatingMenu = false">
+        <v-list-item-title>Mes Réservations</v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="showFloatingMenu = false">
+        <v-list-item-title @click="authStore.logout()"
+          >Déconnexion</v-list-item-title
+        >
+      </v-list-item>
+    </v-list>
+    <v-list v-else>
+      <v-list-item @click="showFloatingMenu = false">
+        <v-list-item-title>
+          <router-link to="/login">Connexion</router-link>
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item @click="showFloatingMenu = false">
+        <v-list-item-title>
+          <router-link to="/register">Inscription</router-link>
+        </v-list-item-title>
+      </v-list-item>
+    </v-list>
   </div>
 </template>
 
@@ -37,7 +88,7 @@ const { token, isAuthenticated, user } = storeToRefs(authStore);
   left: 50%;
   transform: translateX(-50%);
   padding: 0 20px;
-  z-index: 1000;
+  z-index: 100;
   height: 80px;
   width: 1240px;
   display: flex;
