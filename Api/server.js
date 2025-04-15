@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import db from "./config/db.js";
 import bicycleRouter from "./routes/BicycleRoute.js";
+import rentalRouter from "./routes/RentalRoute.js";
+import reviewRouter from "./routes/ReviewRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +17,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/bicycles", bicycleRouter);
+app.use("/api/rentals", rentalRouter);
+app.use("/api/reviews", reviewRouter);
 
 db.connect((err) => {
   if (err) {
