@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import * as accountModel from "../models/AccountModel.js";
 import { createToken } from "../config/jwt.js";
 
@@ -15,7 +14,7 @@ export const login = async (req, res) => {
   // Get the account by email
   const account = await accountModel._getAccountByEmailPrivate(email);
   if (!account) {
-    res.status(404).send("Account not found");
+    res.status(401).send("Invalid credentials");
     return;
   }
 
@@ -25,7 +24,7 @@ export const login = async (req, res) => {
     account.hashed_password
   );
   if (!isPasswordValid) {
-    res.status(401).send("Invalid password");
+    res.status(401).send("Invalid credentials");
     return;
   }
 
