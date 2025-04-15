@@ -1,4 +1,5 @@
 import * as rentalModel from "../models/RentalModel.js";
+import * as accountModel from "../models/AccountModel.js";
 
 /**
  * Get all rentals
