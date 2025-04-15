@@ -57,7 +57,7 @@ export const createBicycle = async (req, res) => {
     res
       .status(400)
       .send(
-        "Bicycle type, brand, model, lifetime, and revision cycle are required"
+        "Bicycle type, brand, model, lifetime, and revision cycle are required",
       );
     return;
   }
@@ -122,7 +122,7 @@ export const updateBicycle = async (req, res) => {
   };
   const updatedBicycle = await bicycleModel.updateBicycle(
     bicycleId,
-    mergedBicycle
+    mergedBicycle,
   );
 
   if (!updatedBicycle) {

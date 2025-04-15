@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import db from "./config/db.js";
-import bicycleRouter from "./routes/BicycleRouter.js";
+import bicycleRouter from "./routes/BicycleRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
