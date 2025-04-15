@@ -44,9 +44,9 @@ export const getReviewById = async (req, res) => {
  * @returns {void}
  */
 export const createReview = async (req, res) => {
-    const { rate, description, date_review } = req.body;
+    const {rental_id, rate, description, date_review } = req.body;
 
-    if (!rate || !description || !date_review) {
+    if (!rental_id || !rate || !description || !date_review) {
         res.status(400).send("Rate, description, and date review are required");
         return;
     }

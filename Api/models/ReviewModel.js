@@ -26,14 +26,14 @@ export const getReviewById = async (id) => {
  * @returns {Object} the created review
  */
 export const createReview = async (reviewData) => {
-  const {rate, description, date_review} = reviewData;
+  const {rental_id, rate, description, date_review} = reviewData;
 
   const result = await db.query(
     `INSERT INTO review (
-        rate, description, date_review
+        rental_id, rate, description, date_review
       ) VALUES ($1, $2, $3, $4) 
       RETURNING *`,
-    [rate, description, date_review],
+    [rental_id, rate, description, date_review],
   );
   return result.rows[0];
 };
@@ -44,14 +44,14 @@ export const createReview = async (reviewData) => {
  * @returns {Object|null} the updated review object or null if not found
  */
 export const updateReview = async (id, reviewData) => {
-  const {rate, description, date_review} = reviewData;
+  const {rental_id, rate, description, date_review} = reviewData;
 
   const result = await db.query(
     `UPDATE review
-      SET rate = $1, description = $2, date_review = $3
-      WHERE review_id = $4
+      SET rental_id = $1, rate = $2, description = $3, date_review = $4
+      WHERE review_id = $5
       RETURNING *`,
-    [rate, description, date_review, id],
+    [rental_id, rate, description, date_review, id],
   );
   return result.rows[0];
 };
