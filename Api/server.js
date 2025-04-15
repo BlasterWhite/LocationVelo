@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import db from "./config/db.js";
 import bicycleRouter from "./routes/BicycleRoute.js";
+import accountRouter from "./routes/AccountRoute.js";
+import authRoute from "./routes/AuthRoute.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,6 +17,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/bicycles", bicycleRouter);
+app.use("/api/accounts", accountRouter);
+app.use("/api/auth", authRoute);
 
 db.connect((err) => {
   if (err) {

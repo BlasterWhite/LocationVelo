@@ -42,7 +42,7 @@ export const getBicycleById = async (req, res) => {
  * @returns {void}
  */
 export const createBicycle = async (req, res) => {
-  const {
+  let {
     bicycle_type,
     brand,
     model,
@@ -61,6 +61,10 @@ export const createBicycle = async (req, res) => {
       );
     return;
   }
+
+  last_km_service = last_km_service || 0;
+  status = status || "available";
+  electric_assistance = electric_assistance || false;
 
   const newBicycle = await bicycleModel.createBicycle({
     bicycle_type,
