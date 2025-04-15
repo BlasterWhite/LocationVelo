@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 dotenv.config();
 import db from "./config/db.js";
 import bicycleRouter from "./routes/BicycleRoute.js";
+import accountRouter from "./routes/AccountRoute.js";
+import authRoute from "./routes/AuthRoute.js";
+import cors from "cors";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -10,11 +13,15 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cors());
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
 app.use("/api/bicycles", bicycleRouter);
+app.use("/api/accounts", accountRouter);
+app.use("/api/auth", authRoute);
 
 db.connect((err) => {
   if (err) {
