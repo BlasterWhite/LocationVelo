@@ -51,7 +51,7 @@ export const createBicycle = async (req, res) => {
     last_km_service,
     status,
     electric_assistance,
-  } = bicycleData;
+  } = req.body;
 
   if (!bicycle_type || !brand || !model || !lifetime || !revision_cycle) {
     res
