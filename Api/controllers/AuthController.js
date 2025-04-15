@@ -4,7 +4,7 @@ import * as accountModel from "../models/AccountModel.js";
 import { createToken } from "../config/jwt.js";
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body || {};
 
   // Check if the email and password are provided
   if (!email || !password) {
@@ -22,7 +22,7 @@ export const login = async (req, res) => {
   // Check if the password is correct
   const isPasswordValid = await bcrypt.compare(
     password,
-    account.hashed_password,
+    account.hashed_password
   );
   if (!isPasswordValid) {
     res.status(401).send("Invalid password");
@@ -31,14 +31,19 @@ export const login = async (req, res) => {
 
   // Generate a JWT token
   const token = createToken(account);
+  const accountData = {
+    ...account,
+    account_id: undefined,
+  };
+  delete accountData.hashed_password;
 
   // Send the token in the response
-  res.status(200).json({ token });
+  res.status(200).json({ token, user: accountData });
 };
 
 export const register = async (req, res) => {
   const { first_name, last_name, email, password, phone, address, subscribe } =
-    req.body;
+    req.body || {};
   if (!first_name || !last_name || !email || !password) {
     res.status(400).send("Missing required fields");
     return;
@@ -72,6 +77,11 @@ export const register = async (req, res) => {
   // Generate a JWT token
   const token = createToken(account);
   // Send the token in the response
-  res.status(201).json({ token });
+  const accountData = {
+    ...account,
+    account_id: undefined,
+  };
+  delete accountData.hashed_password;
+  res.status(201).json({ token, user: accountData });
   return;
 };

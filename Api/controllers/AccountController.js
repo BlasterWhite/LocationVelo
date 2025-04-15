@@ -44,7 +44,7 @@ export const getAccountById = async (req, res) => {
  */
 export const createAccount = async (req, res) => {
   const { first_name, last_name, email, password, phone, address, subscribe } =
-    req.body;
+    req.body || {};
 
   if (!first_name || !last_name || !email || !password) {
     res.status(400).send("Missing required fields");
@@ -101,7 +101,7 @@ export const updateAccount = async (req, res) => {
     address,
     subscribe,
     account_role,
-  } = req.body;
+  } = req.body || {};
 
   if (!accountId) {
     res.status(400).send("Account id not provided");
