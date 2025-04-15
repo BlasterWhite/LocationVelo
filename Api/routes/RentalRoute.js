@@ -21,4 +21,3 @@ router.put("/:id", updateRental);
 router.delete("/:id", deleteRental);
 // Export the router
 export default router;
-

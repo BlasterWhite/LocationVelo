@@ -9,7 +9,7 @@ export const getRentals = async () => {
   return result.rows;
 };
 
-/** 
+/**
  * Get a rental by its id
  * @param {Number} id id of the rental
  * @returns {Object|null} the rental object or null if not found
@@ -27,28 +27,17 @@ export const getRentalById = async (id) => {
  * @returns {Object} the created rental
  */
 export const createRental = async (rentalData) => {
-    const {
-        account_id,
-        start_date,
-        end_date,
-        payment_status,
-        rental_status
-    } = rentalData;
-    
-    const result = await db.query(
-        `INSERT INTO rental (
+  const { account_id, start_date, end_date, payment_status, rental_status } =
+    rentalData;
+
+  const result = await db.query(
+    `INSERT INTO rental (
             account_id, start_date, end_date, payment_status, rental_status
         ) VALUES ($1, $2, $3, $4, $5) 
         RETURNING *`,
-        [
-        account_id,
-        start_date,
-        end_date,
-        payment_status,
-        rental_status,
-        ],
-    );
-    return result.rows[0];
+    [account_id, start_date, end_date, payment_status, rental_status],
+  );
+  return result.rows[0];
 };
 
 /**
@@ -57,15 +46,10 @@ export const createRental = async (rentalData) => {
  * @returns {Object|null} the updated rental object or null if not found
  */
 export const updateRental = async (id, rentalData) => {
-    const {
-        account_id,
-        start_date,
-        end_date,
-        payment_status,
-        rental_status
-    } = rentalData;
-    const result = await db.query(
-        `UPDATE rental SET 
+  const { account_id, start_date, end_date, payment_status, rental_status } =
+    rentalData;
+  const result = await db.query(
+    `UPDATE rental SET 
             account_id = $1, 
             start_date = $2, 
             end_date = $3, 
@@ -73,16 +57,9 @@ export const updateRental = async (id, rentalData) => {
             rental_status = $5
         WHERE rental_id = $6
         RETURNING *`,
-        [
-        account_id,
-        start_date,
-        end_date,
-        payment_status,
-        rental_status,
-        id,
-        ],
-    );
-    return result.rows[0] || null; // Return the first row or null if not found
+    [account_id, start_date, end_date, payment_status, rental_status, id],
+  );
+  return result.rows[0] || null; // Return the first row or null if not found
 };
 
 /**
@@ -91,9 +68,9 @@ export const updateRental = async (id, rentalData) => {
  * @returns {Boolean} true if deleted, false otherwise
  */
 export const deleteRental = async (id) => {
-    const result = await db.query(
-        `DELETE FROM rental WHERE rental_id = $1 RETURNING *`,
-        [id],
-    );
-    return result.rowCount > 0; // Return true if a row was deleted
+  const result = await db.query(
+    `DELETE FROM rental WHERE rental_id = $1 RETURNING *`,
+    [id],
+  );
+  return result.rowCount > 0; // Return true if a row was deleted
 };

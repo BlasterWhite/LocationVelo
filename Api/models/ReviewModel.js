@@ -26,7 +26,7 @@ export const getReviewById = async (id) => {
  * @returns {Object} the created review
  */
 export const createReview = async (reviewData) => {
-  const {rental_id, rate, description, date_review} = reviewData;
+  const { rental_id, rate, description, date_review } = reviewData;
 
   const result = await db.query(
     `INSERT INTO review (
@@ -44,7 +44,7 @@ export const createReview = async (reviewData) => {
  * @returns {Object|null} the updated review object or null if not found
  */
 export const updateReview = async (id, reviewData) => {
-  const {rental_id, rate, description, date_review} = reviewData;
+  const { rental_id, rate, description, date_review } = reviewData;
 
   const result = await db.query(
     `UPDATE review
@@ -67,4 +67,3 @@ export const deleteReview = async (id) => {
   ]);
   return result.rowCount > 0;
 };
-
