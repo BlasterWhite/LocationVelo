@@ -12,10 +12,6 @@ export const useAuthStore = defineStore("auth", () => {
     checkTokenExpiration(newToken);
   }
 
-  function setUser(userData) {
-    user.value = userData;
-  }
-
   function logout() {
     token.value = null;
     user.value = null;
@@ -24,10 +20,12 @@ export const useAuthStore = defineStore("auth", () => {
   }
 
   const isAuthenticated = computed(() => !!token.value);
-  
-  watch(token, (newToken) => {
-    console.log("Token changed:", newToken);
-    console.log("isAuthenticated:", isAuthenticated.value);
+
+  watch(token, () => {
+    const decodedToken = decodeToken();
+    if (decodedToken && decodedToken?.user) {
+      user.value = decodedToken.user;
+    }
   });
 
   function checkTokenExpiration(jwtToken) {
@@ -68,7 +66,6 @@ export const useAuthStore = defineStore("auth", () => {
     user,
     error,
     setToken,
-    setUser,
     logout,
     isAuthenticated,
     decodeToken,

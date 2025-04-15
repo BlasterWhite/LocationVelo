@@ -1,6 +1,12 @@
 <script setup>
 import { useAuth } from "@/composables/useAuth";
+import { useRouter } from "vue-router";
 const { email, password, login, error } = useAuth();
+const router = useRouter();
+
+function register() {
+  router.push({ name: "register" });
+}
 </script>
 
 <template>

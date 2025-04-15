@@ -7,14 +7,18 @@ export const login = async (req, res) => {
 
   // Check if the email and password are provided
   if (!email || !password) {
-    res.status(400).send("Email and password are required");
+    res.status(400).json({
+      error: "Le mail et le mot de passe sont requis",
+    });
     return;
   }
 
   // Get the account by email
   const account = await accountModel._getAccountByEmailPrivate(email);
   if (!account) {
-    res.status(401).send("Invalid credentials");
+    res.status(401).json({
+      error: "Mail ou mot de passe incorrect",
+    });
     return;
   }
 
@@ -24,17 +28,19 @@ export const login = async (req, res) => {
     account.hashed_password
   );
   if (!isPasswordValid) {
-    res.status(401).send("Invalid credentials");
+    res.status(401).json({
+      error: "Mail ou mot de passe incorrect",
+    });
     return;
   }
 
-  // Generate a JWT token
-  const token = createToken(account);
   const accountData = {
     ...account,
     account_id: undefined,
   };
-  delete accountData.hashed_password;
+  delete accountData.hashed_password; // Remove the hashed password from the response
+  // Generate a JWT token
+  const token = createToken(accountData);
 
   // Send the token in the response
   res.status(200).json({ token, user: accountData });
@@ -44,13 +50,17 @@ export const register = async (req, res) => {
   const { first_name, last_name, email, password, phone, address, subscribe } =
     req.body || {};
   if (!first_name || !last_name || !email || !password) {
-    res.status(400).send("Missing required fields");
+    res.status(400).json({
+      error: "Les champs nom, prénom, email et mot de passe sont requis",
+    });
     return;
   }
   // Check if the email already exists
   const existingAccount = await accountModel._getAccountByEmailPrivate(email);
   if (existingAccount) {
-    res.status(409).send("Email already exists");
+    res.status(409).json({
+      error: "Cet email est déjà utilisé",
+    });
     return;
   }
 
@@ -70,17 +80,20 @@ export const register = async (req, res) => {
 
   const account = await accountModel.createAccount(payloadAccount);
   if (!account) {
-    res.status(500).send("Error creating account");
+    res.status(500).json({
+      error: "Erreur lors de la création du compte",
+    });
     return;
   }
-  // Generate a JWT token
-  const token = createToken(account);
-  // Send the token in the response
   const accountData = {
     ...account,
     account_id: undefined,
   };
-  delete accountData.hashed_password;
+  delete accountData.hashed_password; // Remove the hashed password from the response
+  // Generate a JWT token
+  const token = createToken(accountData);
+  // Send the token in the response
+
   res.status(201).json({ token, user: accountData });
   return;
 };
