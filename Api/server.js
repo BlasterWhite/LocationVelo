@@ -20,7 +20,7 @@ app.use("/api/bicycles", bicycleRouter);
 app.use("/api/maintenance", maintenanceRouter);
 app.use("/api/replacements", replacementRouter);
 
-db.connect((err) => { 
+db.connect((err) => {
   if (err) {
     console.error("Database connection error:", err);
     return;

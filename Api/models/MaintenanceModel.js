@@ -5,8 +5,8 @@ import db from "../config/db.js";
  * @returns {Array} array of maintenance
  */
 export const getMaintenance = async () => {
-    const result = await db.query("SELECT * FROM maintenance");
-    return result.rows;
+  const result = await db.query("SELECT * FROM maintenance");
+  return result.rows;
 };
 
 /**
@@ -15,12 +15,12 @@ export const getMaintenance = async () => {
  * @returns {Object|null} the maintenance object or null if not found
  */
 export const getMaintenanceById = async (id) => {
-    const result = await db.query("SELECT * FROM maintenance WHERE maintenance_id = $1", [
-      id,
-    ]);
-    return result?.rows?.[0] || null; // Return the first row or null if not found
+  const result = await db.query(
+    "SELECT * FROM maintenance WHERE maintenance_id = $1",
+    [id],
+  );
+  return result?.rows?.[0] || null; // Return the first row or null if not found
 };
-
 
 /**
  * Create a new maintenance
@@ -28,24 +28,16 @@ export const getMaintenanceById = async (id) => {
  * @returns {Object} the created maintenance
  */
 export const createMaintenance = async (maintenanceData) => {
-    const {
-      bicycle_id,
-      start_date,
-      end_date,
-    } = maintenanceData;
-  
-    const result = await db.query(
-      `INSERT INTO maintenance (
+  const { bicycle_id, start_date, end_date } = maintenanceData;
+
+  const result = await db.query(
+    `INSERT INTO maintenance (
           bicycle_id, start_date, end_date
         ) VALUES ($1, $2, $3) 
         RETURNING *`,
-      [
-        bicycle_id,
-        start_date,
-        end_date,
-      ],
-    );
-    return result.rows[0];
+    [bicycle_id, start_date, end_date],
+  );
+  return result.rows[0];
 };
 
 /**
@@ -55,24 +47,15 @@ export const createMaintenance = async (maintenanceData) => {
  * @returns {Object} the updated maintenance
  */
 export const updateMaintenance = async (id, maintenanceData) => {
-    const {
-        bicycle_id,
-        start_date,
-        end_date,
-    } = maintenanceData;
-  
-    const result = await db.query(
-      `UPDATE maintenance SET 
+  const { bicycle_id, start_date, end_date } = maintenanceData;
+
+  const result = await db.query(
+    `UPDATE maintenance SET 
               bicycle_id = $1, start_date = $2, end_date = $3
               WHERE maintenance_id = $4 RETURNING *`,
-      [
-        bicycle_id,
-        start_date,
-        end_date,
-        id,
-      ],
-    );
-    return result.rows[0]; // Return the updated maintenance
+    [bicycle_id, start_date, end_date, id],
+  );
+  return result.rows[0]; // Return the updated maintenance
 };
 
 /**
@@ -81,9 +64,9 @@ export const updateMaintenance = async (id, maintenanceData) => {
  * @returns {Boolean} true if deleted, false if not found
  */
 export const deleteMaintenance = async (id) => {
-    const result = await db.query(
-        "DELETE FROM maintenance WHERE maintenance_id = $1 RETURNING *",
-        [id],
-    );
-    return result.rowCount > 0; // Returns true if a row was deleted
+  const result = await db.query(
+    "DELETE FROM maintenance WHERE maintenance_id = $1 RETURNING *",
+    [id],
+  );
+  return result.rowCount > 0; // Returns true if a row was deleted
 };

@@ -36,7 +36,6 @@ export const getReplacementById = async (req, res) => {
   res.json(replacement);
 };
 
-
 /**
  * Create a replacement
  * @param {Object} req - The express request object
@@ -44,31 +43,25 @@ export const getReplacementById = async (req, res) => {
  * @returns {void}
  */
 export const createReplacement = async (req, res) => {
-  const {
-        maintenance_id,
-        part_ref,
-        part_name,
-  } = req.body||{};
+  const { maintenance_id, part_ref, part_name } = req.body || {};
 
   if (!maintenance_id || !part_ref || !part_name) {
     res
       .status(400)
-      .send(
-        "Maintenance id, part ref, and part name are required",
-      );
+      .send("Maintenance id, part ref, and part name are required");
     return;
   }
 
   const maintenance = await maintenanceModel.getMaintenanceById(maintenance_id);
-  if(!maintenance) {
+  if (!maintenance) {
     res.status(404).send("Maintenance not found");
     return;
   }
 
   const newReplacement = await replacementModel.createReplacement({
-        maintenance_id,
-        part_ref,
-        part_name,
+    maintenance_id,
+    part_ref,
+    part_name,
   });
 
   // Check if the replacement was created successfully
@@ -97,14 +90,10 @@ export const updateReplacement = async (req, res) => {
     return;
   }
 
-  const {
-        maintenance_id,
-        part_ref,
-        part_name,
-  } = req.body||{};
+  const { maintenance_id, part_ref, part_name } = req.body || {};
 
   const maintenance = await maintenanceModel.getMaintenanceById(maintenance_id);
-  if(!maintenance) {
+  if (!maintenance) {
     res.status(404).send("Maintenance not found");
     return;
   }

@@ -36,7 +36,6 @@ export const getMaintenanceById = async (req, res) => {
   res.json(maintenance);
 };
 
-
 /**
  * Create a maintenance
  * @param {Object} req - The express request object
@@ -44,40 +43,28 @@ export const getMaintenanceById = async (req, res) => {
  * @returns {void}
  */
 export const createMaintenance = async (req, res) => {
-  const {
-        bicycle_id,
-        start_date,
-        end_date,
-  } = req.body||{};
+  const { bicycle_id, start_date, end_date } = req.body || {};
 
   if (!bicycle_id || !start_date || !end_date) {
-    res
-      .status(400)
-      .send(
-        "Bicycle id, start date, and end date are required",
-      );
+    res.status(400).send("Bicycle id, start date, and end date are required");
     return;
   }
 
-  if(start_date >= end_date) {
-    res
-      .status(400)
-      .send(
-        "start date must be before end date",
-      );
+  if (start_date >= end_date) {
+    res.status(400).send("start date must be before end date");
     return;
   }
 
   const bicycle = await bicycleModel.getBicycleById(bicycle_id);
-  if(!bicycle) {
+  if (!bicycle) {
     res.status(404).send("Bicycle not found");
     return;
   }
 
   const newMaintenance = await maintenanceModel.createMaintenance({
-        bicycle_id,
-        start_date,
-        end_date,
+    bicycle_id,
+    start_date,
+    end_date,
   });
 
   // Check if the maintenance was created successfully
@@ -106,23 +93,19 @@ export const updateMaintenance = async (req, res) => {
     return;
   }
 
-  const {
-        bicycle_id,
-        start_date,
-        end_date,
-  } = req.body||{};
+  const { bicycle_id, start_date, end_date } = req.body || {};
 
-  if(start_date >= end_date || start_date >= maintenance.end_date || maintenance.start_date >= maintenance.end_date) {
-    res
-      .status(400)
-      .send(
-        "start date must be before end date",
-      );
+  if (
+    start_date >= end_date ||
+    start_date >= maintenance.end_date ||
+    maintenance.start_date >= maintenance.end_date
+  ) {
+    res.status(400).send("start date must be before end date");
     return;
   }
 
   const bicycle = await bicycleModel.getBicycleById(bicycle_id);
-  if(!bicycle) {
+  if (!bicycle) {
     res.status(404).send("Bicycle not found");
     return;
   }
