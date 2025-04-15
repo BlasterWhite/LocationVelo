@@ -1,0 +1,160 @@
+import * as bicycleModel from "../models/BicycleModel.js";
+
+/**
+ * Get all bicycles
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+export const getBicycles = async (req, res) => {
+  const bicycles = await bicycleModel.getBicycles();
+  if (!bicycles) {
+    res.status(404).send("Bicycles not found");
+    return;
+  }
+  res.json(bicycles);
+};
+
+/**
+ * Get a by bicycle by its id
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+export const getBicycleById = async (req, res) => {
+  const bicycleId = req.params.id;
+  if (!bicycleId) {
+    res.status(400).send("Bicycle id not provided");
+    return;
+  }
+  const bicycle = await bicycleModel.getBicycleById(bicycleId);
+  if (!bicycle) {
+    res.status(404).send("Bicycle not found");
+    return;
+  }
+  res.json(bicycle);
+};
+
+/**
+ * Create a bicycle
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+export const createBicycle = async (req, res) => {
+  const {
+    bicycle_type,
+    brand,
+    model,
+    lifetime,
+    revision_cycle,
+    last_km_service,
+    status,
+    electric_assistance,
+  } = req.body;
+
+  if (!bicycle_type || !brand || !model || !lifetime || !revision_cycle) {
+    res
+      .status(400)
+      .send(
+        "Bicycle type, brand, model, lifetime, and revision cycle are required"
+      );
+    return;
+  }
+
+  const newBicycle = await bicycleModel.createBicycle({
+    bicycle_type,
+    brand,
+    model,
+    lifetime,
+    revision_cycle,
+    last_km_service,
+    status,
+    electric_assistance,
+  });
+
+  // Check if the bicycle was created successfully
+  if (!newBicycle) {
+    res.status(500).send("Internal Server Error");
+    return;
+  }
+
+  // Respond with the created bicycle
+  res.status(201).json(newBicycle);
+};
+
+/**
+ * Update a bicycle by its id
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+export const updateBicycle = async (req, res) => {
+  const bicycleId = req.params.id;
+
+  const bicycle = await bicycleModel.getBicycleById(bicycleId);
+
+  if (!bicycle) {
+    res.status(404).send("Bicycle not found");
+    return;
+  }
+
+  const {
+    bicycle_type,
+    brand,
+    model,
+    lifetime,
+    revision_cycle,
+    last_km_service,
+    status,
+    electric_assistance,
+  } = req.body;
+
+  const mergedBicycle = {
+    bicycle_type: bicycle_type || bicycle.bicycle_type,
+    brand: brand || bicycle.brand,
+    model: model || bicycle.model,
+    lifetime: lifetime || bicycle.lifetime,
+    revision_cycle: revision_cycle || bicycle.revision_cycle,
+    last_km_service: last_km_service || bicycle.last_km_service,
+    status: status || bicycle.status,
+    electric_assistance: electric_assistance || bicycle.electric_assistance,
+  };
+  const updatedBicycle = await bicycleModel.updateBicycle(
+    bicycleId,
+    mergedBicycle
+  );
+
+  if (!updatedBicycle) {
+    res.status(500).send("Internal Server Error");
+    return;
+  }
+
+  res.json(updatedBicycle);
+};
+
+/**
+ *  Delete a bicycle by its ID
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+export const deleteBicycle = async (req, res) => {
+  const bicycleId = req.params.id;
+
+  const bicycle = await bicycleModel.getBicycleById(bicycleId);
+
+  if (!bicycle) {
+    res.status(404).send("Bicycle not found");
+    return;
+  }
+
+  const deleted = await bicycleModel.deleteBicycle(bicycleId);
+
+  if (!deleted) {
+    res.status(500).send("Internal Server Error");
+    return;
+  }
+
+  res.status(204).send();
+};
