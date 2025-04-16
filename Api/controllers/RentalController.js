@@ -121,7 +121,7 @@ export const updateRental = async (req, res) => {
 
   const updatedRental = await rentalModel.updateRental(rentalId, mergedRental);
   if (!updatedRental) {
-    res.status(500).send("Invalid Server Error");
+    res.status(500).send("Internal Server Error");
     return;
   }
   res.json(updatedRental);
