@@ -47,7 +47,7 @@ export const getMaintenance = async (req, res) => {
 };
 
 /**
- * Get a by maintenance by its id
+ * Get a maintenance by its id
  * @param {Object} req - The express request object
  * @param {Object} res - The express response object
  * @returns {void}
