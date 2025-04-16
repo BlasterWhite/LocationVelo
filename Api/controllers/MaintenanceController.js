@@ -13,7 +13,37 @@ export const getMaintenance = async (req, res) => {
     res.status(404).send("Maintenance not found");
     return;
   }
-  res.json(maintenance);
+
+  let mergedMaintenance = [];
+  maintenance.forEach((item) => {
+    // si la maintenance n'est pas présente dans le tableau mergedMaintenance
+    if (
+      !mergedMaintenance.find(
+        (mergedItem) => mergedItem.maintenance_id === item.maintenance_id,
+      )
+    ) {
+      mergedMaintenance.push({
+        maintenance_id: item.maintenance_id,
+        bicycle_id: item.bicycle_id,
+        start_date: item.start_date,
+        end_date: item.end_date,
+        replacements: [],
+      });
+    }
+
+    if (item.replacement_id !== null) {
+      const index = mergedMaintenance.findIndex(
+        (mergedItem) => mergedItem.maintenance_id === item.maintenance_id,
+      );
+      mergedMaintenance[index].replacements.push({
+        replacement_id: item.replacement_id,
+        part_ref: item.part_ref,
+        part_name: item.part_name,
+      });
+    }
+  });
+
+  res.json(mergedMaintenance);
 };
 
 /**
@@ -33,7 +63,26 @@ export const getMaintenanceById = async (req, res) => {
     res.status(404).send("Maintenance not found");
     return;
   }
-  res.json(maintenance);
+
+  let mergedMaintenance = {
+    maintenance_id: maintenance[0].maintenance_id,
+    bicycle_id: maintenance[0].bicycle_id,
+    start_date: maintenance[0].start_date,
+    end_date: maintenance[0].end_date,
+    replacements: [],
+  };
+
+  maintenance.forEach((item) => {
+    if (item.replacement_id !== null) {
+      mergedMaintenance.replacements.push({
+        replacement_id: item.replacement_id,
+        part_ref: item.part_ref,
+        part_name: item.part_name,
+      });
+    }
+  });
+
+  res.json(mergedMaintenance);
 };
 
 /**

@@ -5,7 +5,9 @@ import db from "../config/db.js";
  * @returns {Array} array of maintenance
  */
 export const getMaintenance = async () => {
-  const result = await db.query("SELECT * FROM maintenance");
+  const result = await db.query(
+    "SELECT m.maintenance_id, bicycle_id, start_date, end_date, replacement_id, part_ref, part_name FROM maintenance m LEFT JOIN replacement r ON r.maintenance_id=m.maintenance_id",
+  );
   return result.rows;
 };
 
@@ -16,10 +18,10 @@ export const getMaintenance = async () => {
  */
 export const getMaintenanceById = async (id) => {
   const result = await db.query(
-    "SELECT * FROM maintenance WHERE maintenance_id = $1",
+    "SELECT m.maintenance_id, bicycle_id, start_date, end_date, replacement_id, part_ref, part_name FROM maintenance m LEFT JOIN replacement r ON r.maintenance_id=m.maintenance_id WHERE m.maintenance_id = $1",
     [id],
   );
-  return result?.rows?.[0] || null; // Return the first row or null if not found
+  return result.rows; // Return the first row or null if not found
 };
 
 /**
