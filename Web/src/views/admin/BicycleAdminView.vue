@@ -257,7 +257,7 @@ async function loadBicycles() {
 }
 
 function add() {
-  // OUvre la modal et clear le les champs
+  // Ouvre la modal et efface les champs
   isEditing.value = false;
   record.value = getEmptyRecord();
   dialog.value = true;
