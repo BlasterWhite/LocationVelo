@@ -7,8 +7,8 @@ export function useRules() {
     password: (value) =>
       value.length >= 6 ||
       "Le mot de passe doit contenir au moins 6 caractères",
-    confirmPassword: (value) =>
-      value === password.value || "Les mots de passe ne correspondent pas",
+    confirmPassword: (value, password) =>
+      value === password || "Les mots de passe ne correspondent pas",
     minLength: (length) => (value) =>
       value.length >= length || `Minimum length is ${length} characters`,
     maxLength: (length) => (value) =>

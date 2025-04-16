@@ -2,9 +2,9 @@ import { ref } from "vue";
 
 export function useFetch() {
   const API_URL = import.meta.env.VITE_URL_API;
-  const token = ref(localStorage.getItem("token") || null);
 
   const fetchData = async (url, options = {}) => {
+    const token = ref(localStorage.getItem("token"));
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token.value}`,
@@ -24,7 +24,6 @@ export function useFetch() {
 
   return {
     API_URL,
-    token,
     fetchData,
   };
 }

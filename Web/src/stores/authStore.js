@@ -80,10 +80,30 @@ export const useAuthStore = defineStore("auth", () => {
       if (response.error) {
         error.value = response.error;
       } else {
-        user.value = response;
+        user.value = response.user;
+        setToken(response.token);
       }
     } catch (err) {
       error.value = "Failed to update user";
+    }
+  }
+
+  async function deleteAccount() {
+    if (!token.value || !user.value || !user.value.account_id) {
+      error.value = "User not authenticated";
+      return;
+    }
+    try {
+      const response = await fetchData("/accounts/" + user.value.account_id, {
+        method: "DELETE",
+      });
+      if (response.error) {
+        error.value = response.error;
+      } else {
+        logout();
+      }
+    } catch (err) {
+      error.value = "Failed to delete account";
     }
   }
 
@@ -92,10 +112,10 @@ export const useAuthStore = defineStore("auth", () => {
     token,
     user,
     error,
-    setToken,
     logout,
     isAuthenticated,
     decodeToken,
     updateUser,
+    deleteAccount,
   };
 });

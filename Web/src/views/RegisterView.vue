@@ -50,7 +50,7 @@ const login = () => {
             v-model="passwordConfirm"
             label="Confirmer le mot de passe"
             type="password"
-            :rules="[rules.required, rules.confirmPassword]"
+            :rules="[rules.required, rules.confirmPassword(password)]"
             :error-messages="error.passwordConfirm"
           ></v-text-field>
           <v-text-field

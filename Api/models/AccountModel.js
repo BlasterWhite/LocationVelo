@@ -138,9 +138,8 @@ export const getAccountByEmail = async (email) => {
  * @returns {Object|null} the account object or null if not found
  */
 export const _getAccountByEmailPrivate = async (email) => {
-  const result = await db.query(
-    `SELECT ${fieldsToSelect.join(",")} FROM account WHERE email = $1`,
-    [email]
-  );
+  const result = await db.query(`SELECT * FROM account WHERE email = $1`, [
+    email,
+  ]);
   return result?.rows?.[0] || null; // Return the first row or null if not found
 };

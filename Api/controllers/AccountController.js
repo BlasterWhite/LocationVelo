@@ -93,7 +93,26 @@ export const createAccount = async (req, res) => {
  * @returns {void}
  */
 export const updateAccount = async (req, res) => {
-  const accountId = req.params.id;
+  let accountId = req.params.id;
+
+  try {
+    accountId = parseInt(accountId);
+  } catch (error) {
+    res.status(400).send("Account id not valid");
+    return;
+  }
+
+  if (!accountId || !req.user) {
+    res.status(400).send("Account id not provided");
+    return;
+  }
+
+  // Check if the user is authorized to update the account
+  if (req.user.account_role !== "admin" && req.user.account_id !== accountId) {
+    res.status(403).send("Unauthorized");
+    return;
+  }
+
   const {
     first_name,
     last_name,
@@ -133,7 +152,7 @@ export const updateAccount = async (req, res) => {
   }
 
   // Create a JWT token
-  createToken(account);
+  const token = createToken(account);
 
   res.json({ token, user: account });
 };
@@ -145,10 +164,23 @@ export const updateAccount = async (req, res) => {
  * @returns {void}
  */
 export const deleteAccount = async (req, res) => {
-  const accountId = req.params.id;
+  let accountId = req.params.id;
+  
+  try {
+    accountId = parseInt(accountId);
+  } catch (error) {
+    res.status(400).send("Account id not valid");
+    return;
+  }
 
-  if (!accountId) {
+  if (!accountId || !req.user) {
     res.status(400).send("Account id not provided");
+    return;
+  }
+
+  // Check if the user is authorized to delete the account
+  if (req.user.account_role !== "admin" && req.user.account_id !== accountId) {
+    res.status(403).send("Unauthorized");
     return;
   }
 

@@ -20,8 +20,8 @@ function logout() {
 }
 
 function deleteAccount() {
-  // Logique pour supprimer le compte
-  console.log("Compte supprimé");
+  authStore.deleteAccount();
+  router.push({ name: "login" });
 }
 
 const editFirstName = ref(user.value.first_name);
@@ -42,22 +42,13 @@ function resetEditFields() {
 }
 
 function saveChanges() {
-  // Logique pour enregistrer les modifications
-  console.log("Modifications enregistrées", {
-    first_name: editFirstName.value,
-    last_name: editLastName.value,
-    email: editEmail.value,
-    phone: editPhone.value,
-    address: editAddress.value,
-    newsLetter: editNewsLetter.value,
-  });
   authStore.updateUser({
     first_name: editFirstName.value,
     last_name: editLastName.value,
     email: editEmail.value,
     phone: editPhone.value,
     address: editAddress.value,
-    newsLetter: editNewsLetter.value,
+    subscribe: editNewsLetter.value,
   });
   showEditModal.value = false;
 }
