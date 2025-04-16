@@ -98,8 +98,8 @@ export const updateReview = async (req, res) => {
   };
 
   const updatedReview = await reviewModel.updateReview(reviewId, mergedReview);
-  if (!review) {
-    res.status(500).send("INternal Server Error");
+  if (!updatedReview) {
+    res.status(500).send("Internal Server Error");
     return;
   }
   res.json(updatedReview);
