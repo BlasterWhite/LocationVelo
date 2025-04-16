@@ -17,7 +17,7 @@ export const getReplacements = async (req, res) => {
 };
 
 /**
- * Get a by replacement by its id
+ * Get a replacement by its id
  * @param {Object} req - The express request object
  * @param {Object} res - The express response object
  * @returns {void}
