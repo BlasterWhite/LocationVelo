@@ -14,6 +14,7 @@ CREATE TABLE bicycle(
 	price_per_day FLOAT NOT NULL DEFAULT 20.0,
 	revision_cycle INTEGER NOT NULL,
 	last_km_service INTEGER NOT NULL DEFAULT 0,
+	counter_km INTEGER NOT NULL DEFAULT 0,
 	status VARCHAR NOT NULL DEFAULT 'Disponible',
 	electric_assistance BOOLEAN NOT NULL DEFAULT false,
 	CONSTRAINT pk_bicycle PRIMARY KEY (bicycle_id)
