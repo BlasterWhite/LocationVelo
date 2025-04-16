@@ -117,7 +117,7 @@ function calculateBicycles() {
   // Type Filter
   if (filterData.value.typeSelected.length > 0)
     localBicycle = localBicycle.filter((bicycle) => {
-      return filterData.value.typeSelected.includes(bicycle.type);
+      return filterData.value.typeSelected.includes(bicycle.bicycle_type);
     });
 
   // Status Filter
