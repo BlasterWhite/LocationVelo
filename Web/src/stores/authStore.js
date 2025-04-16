@@ -21,12 +21,16 @@ export const useAuthStore = defineStore("auth", () => {
 
   const isAuthenticated = computed(() => !!token.value);
 
-  watch(token, () => {
-    const decodedToken = decodeToken();
-    if (decodedToken && decodedToken?.user) {
-      user.value = decodedToken.user;
-    }
-  });
+  watch(
+    token,
+    () => {
+      const decodedToken = decodeToken();
+      if (decodedToken && decodedToken?.user) {
+        user.value = decodedToken.user;
+      }
+    },
+    { immediate: true },
+  );
 
   function checkTokenExpiration(jwtToken) {
     if (!jwtToken) return;

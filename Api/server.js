@@ -5,6 +5,7 @@ import db from "./config/db.js";
 import bicycleRouter from "./routes/BicycleRoute.js";
 import accountRouter from "./routes/AccountRoute.js";
 import authRoute from "./routes/AuthRoute.js";
+import filterRoute from "./routes/FilterRoute.js";
 import cors from "cors";
 
 const app = express();
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 app.use("/api/bicycles", bicycleRouter);
 app.use("/api/accounts", accountRouter);
 app.use("/api/auth", authRoute);
+app.use("/api/filters", filterRoute);
 
 db.connect((err) => {
   if (err) {

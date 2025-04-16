@@ -71,6 +71,7 @@ const login = () => {
     <v-checkbox
       v-model="newsLetter"
       label="S'inscrire à la newsletter"
+      color="primary"
     ></v-checkbox>
     <p class="error">{{ error }}</p>
     <v-btn @click="register">Register</v-btn>
