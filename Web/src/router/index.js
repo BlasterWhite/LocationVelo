@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import CatalogView from "../views/CatalogView.vue";
+import AboutView from "../views/AboutView.vue";
 import DebugView from "../views/DebugView.vue";
 
 const router = createRouter({
@@ -33,6 +34,11 @@ const router = createRouter({
       name: "debug",
       component: DebugView,
     },
+    {
+      path: "/about",
+      name: "about",
+      component: AboutView,
+    }
   ],
 });
 
