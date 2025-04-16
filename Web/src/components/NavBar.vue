@@ -31,7 +31,7 @@ const { floatingStyles: floatingMenuStyle } = useFloating(
     </div>
     <div class="center">
       <router-link to="/">Accueil</router-link>
-      <router-link to="/login">Catalogue</router-link>
+      <router-link to="/catalog">Catalogue</router-link>
       <router-link to="/register">Assistance</router-link>
       <router-link to="/debug">A propos</router-link>
     </div>
