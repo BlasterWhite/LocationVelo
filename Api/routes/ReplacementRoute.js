@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-// Route to get all replacementd
+// Route to get all replacements
 router.get("/", getReplacements);
 // Route to get a replacement by ID
 router.get("/:id", getReplacementById);
