@@ -53,7 +53,7 @@ export const createBicycle = async (bicycleData) => {
       last_km_service,
       status,
       electric_assistance,
-    ],
+    ]
   );
   return result.rows[0];
 };
@@ -62,7 +62,7 @@ export const createBicycle = async (bicycleData) => {
  *  Update a bicycle by its id (Merge with existing data)
  * @param {Number} id id of the bicycle to update
  * @param {Object} bicycleData object containing the updated bicycle data
- * @returns
+ * @returns {Object} the updated bicycle
  */
 export const updateBicycle = async (id, bicycleData) => {
   const {
@@ -91,7 +91,7 @@ export const updateBicycle = async (id, bicycleData) => {
       status,
       electric_assistance,
       id,
-    ],
+    ]
   );
   return result.rows[0]; // Return the updated bicycle
 };
@@ -104,7 +104,38 @@ export const updateBicycle = async (id, bicycleData) => {
 export const deleteBicycle = async (id) => {
   const result = await db.query(
     "DELETE FROM bicycle WHERE bicycle_id = $1 RETURNING *",
-    [id],
+    [id]
   );
   return result.rowCount > 0; // Returns true if a row was deleted
+};
+
+/**
+ * Get pricing information for a bicycles
+ * @returns {Object} object containing pricing information
+ */
+export const getBicyclePricing = async () => {
+  const result = await db.query(
+    "SELECT MAX(price_per_day) AS max_price, MIN(price_per_day) AS min_price, AVG(price_per_day) AS avg_price FROM bicycle"
+  );
+  return result.rows;
+};
+
+export const getAllBrands = async () => {
+  const result = await db.query("SELECT DISTINCT brand FROM bicycle");
+  return result.rows;
+};
+
+export const getAllModels = async () => {
+  const result = await db.query("SELECT DISTINCT model FROM bicycle");
+  return result.rows;
+};
+
+export const getAllTypes = async () => {
+  const result = await db.query("SELECT DISTINCT bicycle_type FROM bicycle");
+  return result.rows;
+};
+
+export const getAllStatuses = async () => {
+  const result = await db.query("SELECT DISTINCT status FROM bicycle");
+  return result.rows;
 };
