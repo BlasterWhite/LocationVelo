@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import db from "./config/db.js";
+import { authMiddleware } from "./middlewares/AuthMiddleware.js";
 import bicycleRouter from "./routes/BicycleRoute.js";
 import accountRouter from "./routes/AccountRoute.js";
 import authRoute from "./routes/AuthRoute.js";
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+app.use(authMiddleware);
 app.use("/api/bicycles", bicycleRouter);
 app.use("/api/accounts", accountRouter);
 app.use("/api/auth", authRoute);

@@ -8,17 +8,20 @@ import jwt from "jsonwebtoken";
  * @returns {void}
  */
 export const authMiddleware = (req, res, next) => {
-  const token = req.headers["authorization"];
+  let token = req.headers["authorization"];
 
   if (!token) {
-    return res.status(401).json({ error: "No token provided" });
+    return next();
   }
+
+  // Check if the token is in the correct format
+  token = token.replace("Bearer ", "");
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: "Failed to authenticate token" });
     }
-    req.userId = decoded.id;
+    req.user = decoded.user;
     next();
   });
 };

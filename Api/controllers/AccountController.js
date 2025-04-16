@@ -1,3 +1,4 @@
+import { createToken } from "../config/jwt.js";
 import * as accountModel from "../models/AccountModel.js";
 import bcrypt from "bcryptjs";
 
@@ -93,6 +94,12 @@ export const createAccount = async (req, res) => {
  */
 export const updateAccount = async (req, res) => {
   const accountId = req.params.id;
+
+  if (!accountId) {
+    res.status(400).send("Account id not provided");
+    return;
+  }
+
   const {
     first_name,
     last_name,
@@ -130,7 +137,11 @@ export const updateAccount = async (req, res) => {
     res.status(500).send("Error updating account");
     return;
   }
-  res.json(account);
+
+  // Create a JWT token
+  const token = createToken(account);
+
+  res.json({ token, user: account });
 };
 
 /**
@@ -141,11 +152,6 @@ export const updateAccount = async (req, res) => {
  */
 export const deleteAccount = async (req, res) => {
   const accountId = req.params.id;
-
-  if (!accountId) {
-    res.status(400).send("Account id not provided");
-    return;
-  }
 
   const account = await accountModel.deleteAccount(accountId);
   if (!account) {
