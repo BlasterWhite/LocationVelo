@@ -86,7 +86,7 @@ export const updateBicycle = async (id, bicycleData) => {
     `UPDATE bicycle SET 
             bicycle_type = $1, brand = $2, model = $3, image = $4, 
             lifetime = $5, price_per_day = $6, revision_cycle = $7, 
-            last_km_service = $8, counter_km = $9, electric_assurance = $10 WHERE bicycle_id = $11 RETURNING *`,
+            last_km_service = $8, counter_km = $9, electric_assistance = $10 WHERE bicycle_id = $11 RETURNING *`,
     [
       bicycle_type,
       brand,
