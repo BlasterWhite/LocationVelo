@@ -1,5 +1,6 @@
 import * as rentalModel from "../models/RentalModel.js";
 import * as accountModel from "../models/AccountModel.js";
+import * as bicycleModel from "../models/BicycleModel.js";
 
 /**
  * Get all rentals
@@ -16,20 +17,27 @@ export const getRentals = async (req, res) => {
 
   let mergedRentals = [];
   rentals.forEach((rental) => {
-    // si la location n'est pas présente dans le tableau mergedRentals 
-    if(!mergedRentals.find(mergedRental => mergedRental.rental_id === rental.rental_id)) {
-      mergedRentals.push({rental_id: rental.rental_id,
-                          account_id: rental.account_id, 
-                          start_date: rental.start_date, 
-                          end_date: rental.end_date, 
-                          payment_status: rental.payment_status, 
-                          rental_status: rental.rental_status, 
-                          bicycles: [],
-                        });
+    // si la location n'est pas présente dans le tableau mergedRentals
+    if (
+      !mergedRentals.find(
+        (mergedRental) => mergedRental.rental_id === rental.rental_id,
+      )
+    ) {
+      mergedRentals.push({
+        rental_id: rental.rental_id,
+        account_id: rental.account_id,
+        start_date: rental.start_date,
+        end_date: rental.end_date,
+        payment_status: rental.payment_status,
+        rental_status: rental.rental_status,
+        bicycles: [],
+      });
     }
-    
-    if(rental.bicycle_id !== null) {
-      const index = mergedRentals.findIndex(mergedRental => mergedRental.rental_id === rental.rental_id);
+
+    if (rental.bicycle_id !== null) {
+      const index = mergedRentals.findIndex(
+        (mergedRental) => mergedRental.rental_id === rental.rental_id,
+      );
       mergedRentals[index].bicycles.push({
         bicycle_id: rental.bicycle_id,
         bicycle_type: rental.bicycle_type,
@@ -98,14 +106,12 @@ export const getRentalById = async (req, res) => {
   res.json(mergedRental);
 };
 
-
 /**
  * Create a rental
  * @param {Object} req - The express request object
  * @param {Object} res - The express response object
  * @returns {void}
  */
-
 export const createRental = async (req, res) => {
   const { account_id, start_date, end_date, payment_status, rental_status } =
     req.body;
@@ -143,6 +149,39 @@ export const createRental = async (req, res) => {
   }
 
   res.status(201).json(rental);
+};
+
+/**
+ * Create a rental association
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+export const createRentalAssociation = async (req, res) => {
+  const { rental_id, bicycle_id } = req.body;
+
+  if (!rental_id || !bicycle_id) {
+    res.status(400).send("Rental ID, and bicycle ID are required");
+    return;
+  }
+  const rental = await rentalModel.getRentalById(rental_id);
+  if (!rental) {
+    res.status(404).send("Rental not found");
+    return;
+  }
+  const bicycle = await bicycleModel.getBicycleById(bicycle_id);
+  if (!bicycle) {
+    res.status(404).send("Bicycle not found");
+    return;
+  }
+
+  const rentalAssociation = await rentalModel.createRentalAssociation(req.body);
+  if (!rentalAssociation) {
+    res.status(500).send("Internal Server Error");
+    return;
+  }
+
+  res.status(201).json(rentalAssociation);
 };
 
 /**
@@ -202,11 +241,44 @@ export const updateRental = async (req, res) => {
 export const deleteRental = async (req, res) => {
   const rentalId = req.params.id;
   const rental = await rentalModel.getRentalById(rentalId);
-  if (!rental) {
+  if (!rental || rental.length === 0) {
     res.status(404).send("Rental not found");
     return;
   }
   const deleted = await rentalModel.deleteRental(rentalId);
+  if (!deleted) {
+    res.status(500).send("Internal Server Error");
+    return;
+  }
+  res.status(204).send();
+};
+
+/**
+ * Delete a rental association by its ids
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+export const deleteRentalAssociation = async (req, res) => {
+  const { rental_id, bicycle_id } = req.body;
+
+  if (!rental_id || !bicycle_id) {
+    res.status(400).send("Rental ID, and bicycle ID are required");
+    return;
+  }
+
+  const rentalAssociation = await rentalModel.getRentalAssociationByIds(
+    rental_id,
+    bicycle_id,
+  );
+  if (!rentalAssociation || rentalAssociation.length === 0) {
+    res.status(404).send("Rental association not found");
+    return;
+  }
+  const deleted = await rentalModel.deleteRentalAssociation(
+    rental_id,
+    bicycle_id,
+  );
   if (!deleted) {
     res.status(500).send("Internal Server Error");
     return;

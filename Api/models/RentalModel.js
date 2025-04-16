@@ -5,7 +5,9 @@ import db from "../config/db.js";
  * @returns {Array} array of rentals
  */
 export const getRentals = async () => {
-  const result = await db.query("SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id");
+  const result = await db.query(
+    "SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id",
+  );
   return result.rows;
 };
 
@@ -15,9 +17,27 @@ export const getRentals = async () => {
  * @returns {Object|null} the rental object or null if not found
  */
 export const getRentalById = async (id) => {
-  const result = await db.query("SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id WHERE r.rental_id = $1", [
-    id,
-  ]);
+  console.log("---");
+  console.log(id);
+  console.log("---");
+  const result = await db.query(
+    "SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id WHERE r.rental_id = $1",
+    [id],
+  );
+  return result.rows;
+};
+
+/**
+ * Get a rental association by its ids
+ * @param {Number} rental_id id of the rental
+ * @param {Number} bicycle_id id of the bicycle
+ * @returns {Object|null} the rental object or null if not found
+ */
+export const getRentalAssociationByIds = async (rental_id, bicycle_id) => {
+  const result = await db.query(
+    "SELECT * FROM rental_association WHERE rental_id = $1 AND bicycle_id = $2",
+    [rental_id, bicycle_id],
+  );
   return result.rows;
 };
 
@@ -36,6 +56,24 @@ export const createRental = async (rentalData) => {
         ) VALUES ($1, $2, $3, $4, $5) 
         RETURNING *`,
     [account_id, start_date, end_date, payment_status, rental_status],
+  );
+  return result.rows[0];
+};
+
+/**
+ * Create a new rental association
+ * @param {Object} rentalAssociationData object containing the rental data
+ * @returns {Object} the created rental
+ */
+export const createRentalAssociation = async (rentalData) => {
+  const { rental_id, bicycle_id } = rentalData;
+
+  const result = await db.query(
+    `INSERT INTO rental_association (
+            rental_id, bicycle_id
+        ) VALUES ($1, $2) 
+        RETURNING *`,
+    [rental_id, bicycle_id],
   );
   return result.rows[0];
 };
@@ -71,6 +109,20 @@ export const deleteRental = async (id) => {
   const result = await db.query(
     `DELETE FROM rental WHERE rental_id = $1 RETURNING *`,
     [id],
+  );
+  return result.rowCount > 0; // Return true if a row was deleted
+};
+
+/**
+ * Delete a rental association by its ids
+ * @param {Number} id id of the rental
+ * @param {Number} id id of the bicycle
+ * @returns {Boolean} true if deleted, false otherwise
+ */
+export const deleteRentalAssociation = async (rental_id, bicycle_id) => {
+  const result = await db.query(
+    `DELETE FROM rental_association WHERE rental_id = $1 AND bicycle_id = $2 RETURNING *`,
+    [rental_id, bicycle_id],
   );
   return result.rowCount > 0; // Return true if a row was deleted
 };
