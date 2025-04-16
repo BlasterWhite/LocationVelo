@@ -80,6 +80,7 @@ function saveChanges() {
         Supprimer le compte
       </v-btn>
     </v-card>
+    <h2 v-else>Veuillez vous connecter pour accéder à votre compte.</h2>
     <v-dialog
       v-model="showEditModal"
       max-width="600px"
