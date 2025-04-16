@@ -63,7 +63,7 @@ export const createRental = async (req, res) => {
       );
     return;
   }
-  const account = await rentalModel.getAccountById(account_id);
+  const account = await accountModel.getAccountById(account_id);
   if (!account) {
     res.status(400).send("Invalid Account ID");
     return;
@@ -97,7 +97,7 @@ export const updateRental = async (req, res) => {
   const { account_id, start_date, end_date, payment_status, rental_status } =
     req.body;
 
-  const account = await rentalModel.getAccountById(req.body.account_id);
+  const account = await accountModel.getAccountById(req.body.account_id);
   if (!account) {
     res.status(400).send("Invalid Account ID");
     return;
