@@ -16,7 +16,6 @@ CREATE TABLE bicycle(
 	revision_cycle INTEGER NOT NULL,
 	last_km_service INTEGER NOT NULL DEFAULT 0,
 	counter_km INTEGER NOT NULL DEFAULT 0,
-	status VARCHAR NOT NULL DEFAULT 'Disponible',
 	electric_assistance BOOLEAN NOT NULL DEFAULT false,
 	CONSTRAINT pk_bicycle PRIMARY KEY (bicycle_id)
 );
@@ -84,7 +83,7 @@ INSERT INTO bicycle (
 		image,
 		revision_cycle,
 		last_km_service,
-		status,
+		counter_km,
 		electric_assistance
 	)
 VALUES (
@@ -96,7 +95,7 @@ VALUES (
 		'https://reidbikes.com/cdn/shop/files/MTB-Sport-MY24-1_1.png?v=1730605841',
 		500,
 		100,
-		'Réservé',
+		250,
 		false
 	),
 	(
@@ -108,7 +107,7 @@ VALUES (
 		'https://bike-mailorder.imgbo.lt/media/image/29/b1/61/MadoneSL6Gen8-MatteDarkWeb-1.png',
 		1000,
 		200,
-		'Réservé',
+		600,
 		DEFAULT
 	),
 	(
@@ -119,7 +118,7 @@ VALUES (
 		15.50,
 		'https://hepha.com/cdn/shop/files/HEPHA_MY24_Trekking7_Performance_StepThrough_1_736929d3-5980-4b92-90f4-b3a5938884f5.png?v=1711108614',
 		750,
-		50,
+		0,
 		DEFAULT,
 		false
 	),
@@ -132,7 +131,7 @@ VALUES (
 		'https://media1.velobecane.com/1572-large_default/velo-electrique-vtt-fabike-electrique-velobecane.jpg',
 		600,
 		DEFAULT,
-		'Maintenance',
+		0,
 		true
 	),
 	(
@@ -144,7 +143,7 @@ VALUES (
 		'https://www.mongoose.com/cdn/shop/files/M41700U10_18U_LegionL18-SIL_PDP_ATF01_41a66bf4-01e6-4843-8ee6-cc8a5cd06d9a_1200x.png?v=1728859903',
 		450,
 		80,
-		'Maintenance',
+		400,
 		false
 	);
 -- Insertion dans la table account

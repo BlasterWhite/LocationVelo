@@ -31,7 +31,7 @@ export const login = async (req, res) => {
   // Check if the password is correct
   const isPasswordValid = await bcrypt.compare(
     password,
-    account.hashed_password
+    account.hashed_password,
   );
   if (!isPasswordValid) {
     res.status(401).json({
