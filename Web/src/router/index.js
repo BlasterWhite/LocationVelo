@@ -4,7 +4,9 @@ import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import AccountView from "../views/AccountView.vue";
 import CatalogView from "../views/CatalogView.vue";
+import AboutView from "../views/AboutView.vue";
 import DebugView from "../views/DebugView.vue";
+import AssistanceView from "../views/AssistanceView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +44,16 @@ const router = createRouter({
       name: "debug",
       component: DebugView,
     },
+    {
+      path: "/about",
+      name: "about",
+      component: AboutView,
+    },
+    {
+      path: "/assistance",
+      name: "assistance",
+      component: AssistanceView,
+    }
   ],
 });
 

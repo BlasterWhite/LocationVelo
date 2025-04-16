@@ -2,15 +2,12 @@
 const props = defineProps({
   icon: {
     type: String,
-    required: true,
   },
   title: {
     type: String,
-    required: true,
   },
   description: {
     type: String,
-    required: true,
   },
 });
 const emit = defineEmits(["click"]);
@@ -21,9 +18,9 @@ const handleClick = () => {
 
 <template>
   <div class="highlight-card" @click="handleClick">
-    <v-icon :icon="icon" size="x-large"></v-icon>
-    <h4>{{ title }}</h4>
-    <p>{{ description }}</p>
+    <v-icon v-if="icon" :icon="icon" size="x-large"></v-icon>
+    <h4 v-if="title">{{ title }}</h4>
+    <p v-if="description">{{ description }}</p>
   </div>
 </template>
 

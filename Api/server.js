@@ -9,6 +9,8 @@ import replacementRouter from "./routes/ReplacementRoute.js";
 import accountRouter from "./routes/AccountRoute.js";
 import authRoute from "./routes/AuthRoute.js";
 import filterRoute from "./routes/FilterRoute.js";
+import rentalRouter from "./routes/RentalRoute.js";
+import reviewRouter from "./routes/ReviewRoute.js";
 import cors from "cors";
 
 const app = express();
@@ -29,6 +31,8 @@ app.use("/api/maintenance", maintenanceRouter);
 app.use("/api/replacements", replacementRouter);
 app.use("/api/accounts", accountRouter);
 app.use("/api/auth", authRoute);
+app.use("/api/rentals", rentalRouter);
+app.use("/api/reviews", reviewRouter);
 app.use("/api/filters", filterRoute);
 
 db.connect((err) => {
