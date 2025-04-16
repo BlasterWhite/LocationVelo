@@ -7,6 +7,8 @@ import CatalogView from "../views/CatalogView.vue";
 import AboutView from "../views/AboutView.vue";
 import DebugView from "../views/DebugView.vue";
 import AssistanceView from "../views/AssistanceView.vue";
+import AdminView from "../views/AdminView.vue";
+import AdminBicyclesView from "../views/admin/BicycleAdminView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -53,7 +55,41 @@ const router = createRouter({
       path: "/assistance",
       name: "assistance",
       component: AssistanceView,
-    }
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: AdminView,
+      meta: {
+        requiresAuth: true,
+      },
+      children: [
+        {
+          path: "bicycles",
+          name: "admin-bicycles",
+          component: AdminBicyclesView,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: "users",
+          name: "admin-users",
+          component: AdminBicyclesView,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: "locations",
+          name: "admin-locations",
+          component: AdminBicyclesView,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+      ],
+    },
   ],
 });
 

@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/authStore";
 const authStore = useAuthStore();
 import { useFloating } from "@floating-ui/vue";
 
-const { isAuthenticated } = storeToRefs(authStore);
+const { isAuthenticated, user } = storeToRefs(authStore);
 
 const userIcon = ref(null);
 const floatingMenu = ref(null);
@@ -17,6 +17,10 @@ const { floatingStyles: floatingMenuStyle } = useFloating(
     placement: "bottom-left",
   },
 );
+
+const isAdmin = computed(() => {
+  return user.value && user.value.account_role === "admin";
+});
 </script>
 
 <template>
@@ -32,8 +36,8 @@ const { floatingStyles: floatingMenuStyle } = useFloating(
     <div class="center">
       <router-link to="/">Accueil</router-link>
       <router-link to="/catalog">Catalogue</router-link>
-      <router-link to="/register">Assistance</router-link>
-      <router-link to="/debug">A propos</router-link>
+      <router-link to="/assistance">Assistance</router-link>
+      <router-link to="/about">A propos</router-link>
     </div>
     <div class="right">
       <v-icon
@@ -55,15 +59,25 @@ const { floatingStyles: floatingMenuStyle } = useFloating(
       <router-link to="/account">
         <v-list-item @click="showFloatingMenu = false">
           <v-list-item-title>Mon Compte</v-list-item-title>
-        </v-list-item></router-link
-      >
+        </v-list-item>
+      </router-link>
+
+      <router-link to="/reservations">
+        <v-list-item @click="showFloatingMenu = false">
+          <v-list-item-title>Mes Réservations</v-list-item-title>
+        </v-list-item>
+      </router-link>
+
+      <router-link v-if="isAdmin" to="/admin">
+        <v-list-item @click="showFloatingMenu = false">
+          <v-list-item-title>Gestion</v-list-item-title>
+        </v-list-item>
+      </router-link>
+
       <v-list-item @click="showFloatingMenu = false">
-        <v-list-item-title>Mes Réservations</v-list-item-title>
-      </v-list-item>
-      <v-list-item @click="showFloatingMenu = false">
-        <v-list-item-title @click="authStore.logout()"
-          >Déconnexion</v-list-item-title
-        >
+        <v-list-item-title @click="authStore.logout()">
+          Déconnexion
+        </v-list-item-title>
       </v-list-item>
     </v-list>
     <v-list v-else>
@@ -163,5 +177,10 @@ const { floatingStyles: floatingMenuStyle } = useFloating(
       font-size: 24px;
     }
   }
+}
+
+a {
+  text-decoration: none;
+  color: #000;
 }
 </style>
