@@ -47,7 +47,6 @@ export const getRentals = async (req, res) => {
         revision_cycle: rental.revision_cycle,
         last_km_service: rental.last_km_service,
         counter_km: rental.counter_km,
-        counter_km: rental.counter_km,
         status: rental.status,
         electric_assistance: rental.electric_assistance,
       });
