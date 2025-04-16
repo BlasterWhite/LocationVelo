@@ -2,6 +2,12 @@ import bcrypt from "bcryptjs";
 import * as accountModel from "../models/AccountModel.js";
 import { createToken } from "../config/jwt.js";
 
+/**
+ * Login function to authenticate a user
+ * @param {Object} req object containing the request data
+ * @param {Object} res object containing the response data
+ * @returns {void}
+ */
 export const login = async (req, res) => {
   const { email, password } = req.body || {};
 
@@ -25,7 +31,7 @@ export const login = async (req, res) => {
   // Check if the password is correct
   const isPasswordValid = await bcrypt.compare(
     password,
-    account.hashed_password
+    account.hashed_password,
   );
   if (!isPasswordValid) {
     res.status(401).json({
@@ -46,6 +52,12 @@ export const login = async (req, res) => {
   res.status(200).json({ token, user: accountData });
 };
 
+/**
+ * Register function to create a new user account
+ * @param {Object} req object containing the request data
+ * @param {Object} res object containing the response data
+ * @returns {void}
+ */
 export const register = async (req, res) => {
   const { first_name, last_name, email, password, phone, address, subscribe } =
     req.body || {};

@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useFetch } from "@/composables/useFetch";
 import FiltersMenu from "@/components/FiltersMenu.vue";
+import bicycleCard from "../components/BicycleCard.vue";
 
 const route = useRoute();
 route.query.startDate = route.query.startDate
@@ -23,7 +24,7 @@ getFilters()
     console.error("Error fetching filters:", error);
   });
 
-const bicycles = ref([]);
+const bicyclesData = ref([]);
 useFetch()
   .fetchData("/bicycles")
   .then((data) => {
@@ -57,6 +58,23 @@ const filterData = ref({
   typeSelected: [],
   statusSelected: [],
 });
+
+const bicycles = ref([]);
+function calculateBicycles() {
+  // Reduce array on Model
+  bicycles.value = bicyclesData.value.reduce((acc, bicycle) => {
+    const model = bicycle.model;
+    if (!acc[model]) {
+      acc[model] = {
+        ...bicycle,
+        quantity: 1,
+      };
+    } else {
+      acc[model].quantity++;
+    }
+    return acc;
+  }, {});
+}
 </script>
 
 <template>
@@ -67,8 +85,24 @@ const filterData = ref({
         :filter-display-opt="filterDisplayOpt"
         v-model="filterData"
       ></filters-menu>
-      <div></div>
+      <div class="bicycles-list">
+        <bicycle-card
+          v-for="(bicycleCard, index) in bicycles"
+          :key="index"
+          :image="bicycleCard.image"
+          :title="bicycleCard.title"
+          :quantity="bicycleCard.quantity"
+          :brand="bicycleCard.brand"
+          :model="bicycleCard.model"
+          :power="bicycleCard.electric_assistance"
+        />
+      </div>
     </main>
+    <p>
+      Start Date:
+      {{ startDate ? startDate.toLocaleDateString() : "Not selected" }} <br />
+      End Date: {{ endDate ? endDate.toLocaleDateString() : "Not selected" }}
+    </p>
   </div>
 </template>
 
@@ -79,6 +113,13 @@ const filterData = ref({
     width: 100%;
     display: flex;
     gap: 24px;
+
+    .bicycles-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      width: 100%;
+    }
   }
 }
 </style>
