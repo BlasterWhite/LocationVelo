@@ -1,3 +1,4 @@
+import { createToken } from "../config/jwt.js";
 import * as accountModel from "../models/AccountModel.js";
 import bcrypt from "bcryptjs";
 
@@ -130,7 +131,11 @@ export const updateAccount = async (req, res) => {
     res.status(500).send("Error updating account");
     return;
   }
-  res.json(account);
+
+  // Create a JWT token
+  createToken(account);
+
+  res.json({ token, user: account });
 };
 
 /**

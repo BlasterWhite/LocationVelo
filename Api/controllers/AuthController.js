@@ -29,9 +29,12 @@ export const login = async (req, res) => {
   }
 
   // Check if the password is correct
+  console.log("Password: ", password);
+  console.log("Hashed Password: ", account.hashed_password);
+
   const isPasswordValid = await bcrypt.compare(
     password,
-    account.hashed_password,
+    account.hashed_password
   );
   if (!isPasswordValid) {
     res.status(401).json({
@@ -42,7 +45,6 @@ export const login = async (req, res) => {
 
   const accountData = {
     ...account,
-    account_id: undefined,
   };
   delete accountData.hashed_password; // Remove the hashed password from the response
   // Generate a JWT token
@@ -99,7 +101,6 @@ export const register = async (req, res) => {
   }
   const accountData = {
     ...account,
-    account_id: undefined,
   };
   delete accountData.hashed_password; // Remove the hashed password from the response
   // Generate a JWT token

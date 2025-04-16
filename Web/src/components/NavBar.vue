@@ -1,11 +1,11 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "../stores/authStore";
 const authStore = useAuthStore();
 import { useFloating } from "@floating-ui/vue";
 
-const { token, isAuthenticated, user } = storeToRefs(authStore);
+const { isAuthenticated } = storeToRefs(authStore);
 
 const userIcon = ref(null);
 const floatingMenu = ref(null);
@@ -52,9 +52,11 @@ const { floatingStyles: floatingMenuStyle } = useFloating(
     style="z-index: 999"
   >
     <v-list v-if="isAuthenticated">
-      <v-list-item @click="showFloatingMenu = false">
-        <v-list-item-title>Mon Compte</v-list-item-title>
-      </v-list-item>
+      <router-link to="/account">
+        <v-list-item @click="showFloatingMenu = false">
+          <v-list-item-title>Mon Compte</v-list-item-title>
+        </v-list-item></router-link
+      >
       <v-list-item @click="showFloatingMenu = false">
         <v-list-item-title>Mes Réservations</v-list-item-title>
       </v-list-item>
@@ -65,16 +67,16 @@ const { floatingStyles: floatingMenuStyle } = useFloating(
       </v-list-item>
     </v-list>
     <v-list v-else>
-      <v-list-item @click="showFloatingMenu = false">
-        <v-list-item-title>
-          <router-link to="/login">Connexion</router-link>
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item @click="showFloatingMenu = false">
-        <v-list-item-title>
-          <router-link to="/register">Inscription</router-link>
-        </v-list-item-title>
-      </v-list-item>
+      <router-link to="/login">
+        <v-list-item @click="showFloatingMenu = false">
+          <v-list-item-title>Connexion </v-list-item-title>
+        </v-list-item></router-link
+      >
+      <router-link to="/register">
+        <v-list-item @click="showFloatingMenu = false">
+          <v-list-item-title>Inscription </v-list-item-title>
+        </v-list-item></router-link
+      >
     </v-list>
   </div>
 </template>

@@ -1,5 +1,8 @@
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
+import { useFetch } from "@/composables/useFetch";
+
+const { fetchData } = useFetch();
 
 export const useAuthStore = defineStore("auth", () => {
   const token = ref(localStorage.getItem("token") || null);
@@ -64,6 +67,26 @@ export const useAuthStore = defineStore("auth", () => {
 
   checkTokenExpiration(token.value);
 
+  async function updateUser(newUser) {
+    if (!token.value || !user.value || !user.value.account_id) {
+      error.value = "User not authenticated";
+      return;
+    }
+    try {
+      const response = await fetchData("/accounts/" + user.value.account_id, {
+        method: "PUT",
+        body: JSON.stringify(newUser),
+      });
+      if (response.error) {
+        error.value = response.error;
+      } else {
+        user.value = response;
+      }
+    } catch (err) {
+      error.value = "Failed to update user";
+    }
+  }
+
   return {
     setToken,
     token,
@@ -73,5 +96,6 @@ export const useAuthStore = defineStore("auth", () => {
     logout,
     isAuthenticated,
     decodeToken,
+    updateUser,
   };
 });
