@@ -46,10 +46,12 @@ export const createBicycle = async (req, res) => {
     bicycle_type,
     brand,
     model,
+    image,
     lifetime,
+    price_per_day,
     revision_cycle,
     last_km_service,
-    status,
+    counter_km,
     electric_assistance,
   } = req.body || {};
 
@@ -63,17 +65,21 @@ export const createBicycle = async (req, res) => {
   }
 
   last_km_service = last_km_service || 0;
-  status = status || "available";
+  counter_km = counter_km || 0;
+  price_per_day = price_per_day || 20.0;
+  image = image || "https://placehold.co/600x400";
   electric_assistance = electric_assistance || false;
 
   const newBicycle = await bicycleModel.createBicycle({
     bicycle_type,
     brand,
     model,
+    image,
     lifetime,
+    price_per_day,
     revision_cycle,
     last_km_service,
-    status,
+    counter_km,
     electric_assistance,
   });
 
@@ -107,10 +113,12 @@ export const updateBicycle = async (req, res) => {
     bicycle_type,
     brand,
     model,
+    image,
     lifetime,
+    price_per_day,
     revision_cycle,
     last_km_service,
-    status,
+    counter_km,
     electric_assistance,
   } = req.body || {};
 
@@ -118,10 +126,12 @@ export const updateBicycle = async (req, res) => {
     bicycle_type: bicycle_type || bicycle.bicycle_type,
     brand: brand || bicycle.brand,
     model: model || bicycle.model,
+    image: image || bicycle.image,
     lifetime: lifetime || bicycle.lifetime,
+    price_per_day: price_per_day || bicycle.price_per_day,
     revision_cycle: revision_cycle || bicycle.revision_cycle,
     last_km_service: last_km_service || bicycle.last_km_service,
-    status: status || bicycle.status,
+    counter_km: counter_km || bicycle.counter_km,
     electric_assistance: electric_assistance || bicycle.electric_assistance,
   };
   const updatedBicycle = await bicycleModel.updateBicycle(

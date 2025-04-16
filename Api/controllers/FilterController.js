@@ -11,13 +11,11 @@ export const getAllFilters = async (req, res) => {
   const brands = await bicycleModel.getAllBrands();
   const models = await bicycleModel.getAllModels();
   const types = await bicycleModel.getAllTypes();
-  const statuses = await bicycleModel.getAllStatuses();
   const payload = {
     pricing,
     brands: brands.map((brand) => brand.brand),
     models: models.map((model) => model.model),
     types: types.map((type) => type.bicycle_type),
-    statuses: statuses.map((status) => status.status),
   };
   res.json(payload);
 };
