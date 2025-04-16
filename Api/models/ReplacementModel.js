@@ -55,7 +55,7 @@ export const updateReplacement = async (id, replacementData) => {
               WHERE replacement_id = $4 RETURNING *`,
     [maintenance_id, part_ref, part_name, id],
   );
-  return result.rows[0]; // Return the updated maintenance
+  return result.rows[0]; // Return the updated replacement
 };
 
 /**
