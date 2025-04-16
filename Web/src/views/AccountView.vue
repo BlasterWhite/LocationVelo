@@ -129,11 +129,6 @@ function saveChanges() {
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <pre>
-        <code>
-            {{ user }}
-        </code>
-    </pre>
   </div>
 </template>
 
@@ -151,6 +146,7 @@ function saveChanges() {
     max-width: 1240px;
     width: 100%;
     margin: 0 auto;
+    padding: 20px;
   }
 }
 </style>
