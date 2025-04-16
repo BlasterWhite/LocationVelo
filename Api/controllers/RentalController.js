@@ -165,13 +165,23 @@ export const createRentalAssociation = async (req, res) => {
     return;
   }
   const rental = await rentalModel.getRentalById(rental_id);
-  if (!rental) {
+  if (!rental || rental.length == 0) {
     res.status(404).send("Rental not found");
     return;
   }
   const bicycle = await bicycleModel.getBicycleById(bicycle_id);
   if (!bicycle) {
     res.status(404).send("Bicycle not found");
+    return;
+  }
+
+  const rentalUnavailable = await rentalModel.getAllUnavailableRentalsByDate(
+    bicycle_id,
+    rental[0].start_date,
+    rental[0].end_date,
+  );
+  if (rentalUnavailable.length > 0) {
+    res.status(400).send("Bicycle is unavailable");
     return;
   }
 

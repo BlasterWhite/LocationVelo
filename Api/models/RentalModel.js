@@ -17,12 +17,41 @@ export const getRentals = async () => {
  * @returns {Object|null} the rental object or null if not found
  */
 export const getRentalById = async (id) => {
-  console.log("---");
-  console.log(id);
-  console.log("---");
   const result = await db.query(
     "SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id WHERE r.rental_id = $1",
     [id],
+  );
+  return result.rows;
+};
+
+/**
+ * Get all rental by its bicycle id
+ * @param {Number} bicycle_id id of the bicycle
+ * @returns {Object|null} the rental object or null if not found
+ */
+export const getRentalByBicycleId = async (bicycle_id) => {
+  const result = await db.query(
+    "SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id WHERE r.rental_id = $1",
+    [id],
+  );
+  return result.rows;
+};
+
+/**
+ * Get all unavailable rentals by bicycle id ans start date and end date
+ * @param {Number} bicycle_id id of the bicycle
+ * @param {Date} start_date start date
+ * @param {Date} end_date end date
+ * @returns {Object|null} the rental object or null if not found
+ */
+export const getAllUnavailableRentalsByDate = async (
+  bicycle_id,
+  start_date,
+  end_date,
+) => {
+  const result = await db.query(
+    "SELECT r.rental_id, r.account_id, r.start_date, r.end_date, r.payment_status, r.rental_status FROM rental r JOIN rental_association ra ON ra.rental_id=r.rental_id WHERE ra.bicycle_id = $1 AND ((start_date <= $2 AND end_date >= $2) OR (start_date <= $3 AND end_date >= $3))",
+    [bicycle_id, start_date, end_date],
   );
   return result.rows;
 };
