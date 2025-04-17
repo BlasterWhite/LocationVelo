@@ -4,15 +4,38 @@ import { useRoute } from "vue-router";
 import { useFetch } from "@/composables/useFetch";
 import FiltersMenu from "@/components/FiltersMenu.vue";
 import bicycleCard from "../components/BicycleCard.vue";
+import CartIcon from "../components/CartIcon.vue";
+import { useCartStore } from "@/stores/cartStore";
+
+const cartStore = useCartStore();
 
 const route = useRoute();
 route.query.startDate = route.query.startDate
   ? new Date(route.query.startDate)
   : null;
 
+const startDate = ref(
+  route.query.startDate ? new Date(route.query.startDate) : null,
+);
+const endDate = ref(route.query.endDate ? new Date(route.query.endDate) : null);
+
 async function getFilters() {
   const filters = await useFetch().fetchData("/filters");
   return filters;
+}
+
+async function getBicycles() {
+  if (startDate.value && endDate.value) {
+    const startDateString = startDate.value.toISOString().split("T")[0];
+    const endDateString = endDate.value.toISOString().split("T")[0];
+    const bicycles = await useFetch().fetchData(
+      `/bicycles/${startDateString}/${endDateString}`,
+    );
+    return bicycles;
+  } else {
+    const bicycles = await useFetch().fetchData("/bicycles");
+    return bicycles;
+  }
 }
 
 const filters = ref(null);
@@ -25,23 +48,19 @@ getFilters()
   });
 
 const bicyclesData = ref([]);
-useFetch()
-  .fetchData("/bicycles")
+getBicycles()
   .then((data) => {
     bicyclesData.value = data;
+    bicycles.value = data;
     calculateBicycles();
   })
   .catch((error) => {
     console.error("Error fetching bicycles:", error);
   });
 
-const startDate = ref(
-  route.query.startDate ? new Date(route.query.startDate) : null,
-);
-const endDate = ref(route.query.endDate ? new Date(route.query.endDate) : null);
-
 const filterDisplayOpt = ref({
   search: true,
+  date: true,
   price: true,
   brand: true,
   model: true,
@@ -52,6 +71,8 @@ const filterDisplayOpt = ref({
 
 const filterData = ref({
   searchText: "",
+  startDate: startDate.value,
+  endDate: endDate.value,
   priceRange: [0, 35],
   electricAssistance: false,
   brandSelected: [],
@@ -61,7 +82,8 @@ const filterData = ref({
 });
 
 const bicycles = ref([]);
-function calculateBicycles() {
+async function calculateBicycles() {
+  await getBicycles();
   // Reduce array on Model
   let localBicycle = bicyclesData.value.reduce((acc, bicycle) => {
     const model = bicycle.model;
@@ -131,10 +153,14 @@ function calculateBicycles() {
 
 watch(
   () => filterData.value,
-  (newValue) => {
+  (newVal) => {
+    cartStore.setDates({
+      start: newVal.startDate,
+      end: newVal.endDate,
+    });
     calculateBicycles();
   },
-  { deep: true },
+  { deep: true, immediate: true },
 );
 </script>
 
@@ -146,12 +172,17 @@ watch(
         :filter-display-opt="filterDisplayOpt"
         v-model="filterData"
       ></filters-menu>
-      <div class="bicycles-list">
+      <div class="cart-icon">
+        <cart-icon />
+      </div>
+      <div class="bicycles-list" :key="bicycles">
         <bicycle-card
           v-for="(bicycleCard, index) in bicycles"
           :key="index"
           :image="bicycleCard.image"
           :title="bicycleCard.model"
+          :start-date="startDate"
+          :end-date="endDate"
           :quantity="bicycleCard.quantity"
           :brand="bicycleCard.brand"
           :model="bicycleCard.model"
@@ -177,6 +208,13 @@ watch(
       gap: 24px;
       width: 100%;
     }
+  }
+
+  .cart-icon {
+    position: fixed;
+    top: 35px;
+    right: 35px;
+    z-index: 1000;
   }
 }
 </style>

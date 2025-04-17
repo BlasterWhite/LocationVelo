@@ -1,5 +1,6 @@
 <script setup>
-import { ref, defineProps } from "vue";
+import { ref, defineProps, watch } from "vue";
+import { useFloating } from "@floating-ui/vue";
 
 const props = defineProps({
   filter: {
@@ -11,6 +12,7 @@ const props = defineProps({
     require: true,
     defaut: () => ({
       search: true,
+      date: true,
       price: true,
       brand: true,
       model: true,
@@ -24,6 +26,8 @@ const props = defineProps({
     require: true,
     defaut: () => ({
       searchText: "",
+      startDate: new Date(),
+      endDate: new Date(),
       priceRangeStart: 0,
       priceRangeEnd: 30,
       priceRange: [0, 30],
@@ -38,14 +42,59 @@ const props = defineProps({
 
 const emits = defineEmits(["update:modelValue"]);
 
-const searchText = ref("");
-const priceRangeStart = ref(0);
-const priceRangeEnd = ref(0);
-const electricAssistance = ref(true);
-const brancdSelected = ref([]);
-const modelSelected = ref([]);
-const typeSelected = ref([]);
-const statusSelected = ref([]);
+// Ajout des dates
+const dateStart = ref(new Date());
+const dateEnd = ref(new Date());
+
+// Gestion de l'affichage des pickers
+const dateStartTrigger = ref(null);
+const dateStartPicker = ref(null);
+const showDateStartPicker = ref(false);
+const { floatingStyles: dateStartPickerStyles } = useFloating(
+  dateStartTrigger,
+  dateStartPicker,
+  { placement: "bottom-start" },
+);
+function toggleDateStartPicker() {
+  showDateEndPicker.value = false;
+  showDateStartPicker.value = !showDateStartPicker.value;
+}
+
+const dateEndTrigger = ref(null);
+const dateEndPicker = ref(null);
+const showDateEndPicker = ref(false);
+const { floatingStyles: dateEndPickerStyles } = useFloating(
+  dateEndTrigger,
+  dateEndPicker,
+  { placement: "bottom-start" },
+);
+
+function toggleDateEndPicker() {
+  showDateStartPicker.value = false;
+  showDateEndPicker.value = !showDateEndPicker.value;
+}
+
+// Watchers pour synchroniser les dates
+watch(
+  () => props.modelValue.startDate,
+  (newVal) => {
+    showDateStartPicker.value = false;
+    if (newVal > dateEnd.value) {
+      dateEnd.value = new Date(newVal);
+      dateEnd.value.setDate(newVal.getDate() + 1);
+    }
+    emits("update:modelValue", {
+      ...props.modelValue,
+      startDate: newVal,
+      endDate: dateEnd.value,
+    });
+  },
+);
+
+watch(dateEnd, (newVal) => {
+  showDateEndPicker.value = false;
+  emits("update:modelValue", { ...props.modelValue, endDate: newVal });
+});
 </script>
 
 <template>
@@ -57,6 +106,50 @@ const statusSelected = ref([]);
       placeholder="Rechercher"
       outlined
     ></v-text-field>
+
+    <div v-if="filterDisplayOpt?.date || false" class="date-pickers">
+      <div
+        class="date-input"
+        ref="dateStartTrigger"
+        @click="toggleDateStartPicker"
+      >
+        <v-icon icon="mdi-calendar" />
+        {{ props.modelValue.startDate.toLocaleDateString("fr-FR") }}
+      </div>
+
+      <div class="date-input" ref="dateEndTrigger" @click="toggleDateEndPicker">
+        <v-icon icon="mdi-calendar" />
+        {{ props.modelValue.endDate.toLocaleDateString("fr-FR") }}
+      </div>
+
+      <!-- Picker flottants -->
+      <div
+        v-if="showDateStartPicker"
+        ref="dateStartPicker"
+        :style="dateStartPickerStyles"
+        class="date-picker-container"
+      >
+        <v-date-picker
+          v-model="props.modelValue.startDate"
+          color="primary"
+          :min="new Date()"
+        />
+      </div>
+
+      <div
+        v-if="showDateEndPicker"
+        ref="dateEndPicker"
+        :style="dateEndPickerStyles"
+        class="date-picker-container"
+      >
+        <v-date-picker
+          v-model="props.modelValue.endDate"
+          color="primary"
+          :min="new Date()"
+        />
+      </div>
+    </div>
+
     <v-range-slider
       v-if="filterDisplayOpt?.price || false"
       v-model="props.modelValue.priceRange"
@@ -160,5 +253,30 @@ const statusSelected = ref([]);
     margin: 0;
     flex-grow: 0;
   }
+}
+
+.date-pickers {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.date-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.date-picker-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
 }
 </style>

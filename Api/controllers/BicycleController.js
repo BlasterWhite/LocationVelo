@@ -59,7 +59,7 @@ export const createBicycle = async (req, res) => {
     res
       .status(400)
       .send(
-        "Bicycle type, brand, model, lifetime, and revision cycle are required",
+        "Bicycle type, brand, model, lifetime, and revision cycle are required"
       );
     return;
   }
@@ -136,7 +136,7 @@ export const updateBicycle = async (req, res) => {
   };
   const updatedBicycle = await bicycleModel.updateBicycle(
     bicycleId,
-    mergedBicycle,
+    mergedBicycle
   );
 
   if (!updatedBicycle) {
@@ -171,4 +171,34 @@ export const deleteBicycle = async (req, res) => {
   }
 
   res.status(204).send();
+};
+
+export const getAvailableBicycleInPeriod = async (req, res) => {
+  const startDate = req.params.startDate;
+  const endDate = req.params.endDate;
+
+  if (!startDate || !endDate) {
+    res.status(400).send("Start date and end date are required");
+    return;
+  }
+
+  // Check date format
+  if (
+    !/^2[0-9]{3}-[0-9]{2}-[0-9]{2}$/.test(startDate) ||
+    !/^2[0-9]{3}-[0-9]{2}-[0-9]{2}$/.test(endDate)
+  ) {
+    res.status(400).send("Bad date format");
+  }
+
+  const available = await bicycleModel.getAvailableBicyclesOnPeriod(
+    startDate,
+    endDate
+  );
+
+  if (!available) {
+    res.status(404).send("Bicycle not found");
+    return;
+  }
+
+  res.json(available);
 };

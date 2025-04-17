@@ -57,7 +57,7 @@ export const createBicycle = async (bicycleData) => {
       last_km_service,
       counter_km,
       electric_assistance,
-    ],
+    ]
   );
   return result.rows[0];
 };
@@ -99,7 +99,7 @@ export const updateBicycle = async (id, bicycleData) => {
       counter_km,
       electric_assistance,
       id,
-    ],
+    ]
   );
   return result.rows[0]; // Return the updated bicycle
 };
@@ -112,7 +112,7 @@ export const updateBicycle = async (id, bicycleData) => {
 export const deleteBicycle = async (id) => {
   const result = await db.query(
     "DELETE FROM bicycle WHERE bicycle_id = $1 RETURNING *",
-    [id],
+    [id]
   );
   return result.rowCount > 0; // Returns true if a row was deleted
 };
@@ -123,7 +123,7 @@ export const deleteBicycle = async (id) => {
  */
 export const getBicyclePricing = async () => {
   const result = await db.query(
-    "SELECT MAX(price_per_day) AS max_price, MIN(price_per_day) AS min_price, AVG(price_per_day) AS avg_price FROM bicycle",
+    "SELECT MAX(price_per_day) AS max_price, MIN(price_per_day) AS min_price, AVG(price_per_day) AS avg_price FROM bicycle"
   );
   return result.rows;
 };
@@ -140,5 +140,27 @@ export const getAllModels = async () => {
 
 export const getAllTypes = async () => {
   const result = await db.query("SELECT DISTINCT bicycle_type FROM bicycle");
+  return result.rows;
+};
+
+export const getAvailableBicyclesOnPeriod = async (startDate, endDate) => {
+  const result = await db.query(
+    `SELECT b.*
+     FROM bicycle b
+     WHERE NOT EXISTS (
+         SELECT 1
+         FROM rental_association ra
+         JOIN rental r ON ra.rental_id = r.rental_id
+         WHERE ra.bicycle_id = b.bicycle_id
+         AND r.start_date <= $2 AND r.end_date >= $1
+     )
+     AND NOT EXISTS (
+         SELECT 1
+         FROM maintenance m
+         WHERE m.bicycle_id = b.bicycle_id
+         AND m.start_date <= $2 AND m.end_date >= $1
+     )`,
+    [startDate, endDate]
+  );
   return result.rows;
 };
