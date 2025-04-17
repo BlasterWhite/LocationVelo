@@ -1,0 +1,333 @@
+<template>
+    <v-sheet border rounded>
+      <v-data-table
+        :headers="headers"
+        :items="rentals"
+        :hide-default-footer="rentals.length < 11"
+      >
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-toolbar-title>
+              <v-icon
+                color="medium-emphasis"
+                icon="mdi-bike"
+                size="x-small"
+                start
+              ></v-icon>
+              Gestion des locations
+            </v-toolbar-title>
+  
+            <v-btn
+              class="me-2"
+              prepend-icon="mdi-plus"
+              rounded="lg"
+              text="Ajouter une location"
+              border
+              @click="add"
+            ></v-btn>
+          </v-toolbar>
+        </template>
+
+        <template v-slot:item.rental_status="{ value }">
+        <v-chip :color="rentalStatusColors[value]" border="thin opacity-25">
+          {{ value }}
+        </v-chip>
+        </template>
+  
+        <template v-slot:item.actions="{ item }">
+          <div class="d-flex ga-2 justify-end">
+            <v-icon
+              color="medium-emphasis"
+              icon="mdi-pencil"
+              size="small"
+              @click="edit(item)"
+            ></v-icon>
+            <v-icon
+              color="medium-emphasis"
+              icon="mdi-delete"
+              size="small"
+              @click="remove(item.rental_id)"
+            ></v-icon>
+          </div>
+        </template>
+      </v-data-table>
+    </v-sheet>
+  
+    <v-dialog v-model="dialog" max-width="500">
+      <v-card
+        :subtitle="`${isEditing ? 'Modifier' : 'Créer'} une location`"
+        :title="`${isEditing ? 'Édition' : 'Nouvelle location'}`"
+      >
+        <template v-slot:text>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field 
+              v-model="record.account_id" 
+              label="ID Compte"
+              type="number">
+              </v-text-field>
+            </v-col>
+  
+            <v-col cols="12" md="6">
+              <div
+                class="startDate-input"
+                ref="startDateTrigger"
+                @click="toggleStartDatePicker"
+              >
+                <v-text-field
+                  :model-value="
+                    record.start_date
+                      ? new Date(record.start_date).toLocaleDateString('fr-FR')
+                      : ''
+                  "
+                  label="Date de début"
+                  readonly
+                  prepend-inner-icon="mdi-calendar"
+                ></v-text-field>
+              </div>
+            </v-col>
+
+            <v-col cols="12" md="6">
+              <div
+                class="endDate-input"
+                ref="endDateTrigger"
+                @click="toggleEndDatePicker"
+              >
+                <v-text-field
+                  :model-value="
+                    record.end_date
+                      ? new Date(record.end_date).toLocaleDateString('fr-FR')
+                      : ''
+                  "
+                  label="Date de fin"
+                  readonly
+                  prepend-inner-icon="mdi-calendar"
+                ></v-text-field>
+              </div>
+            </v-col>
+  
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="record.payment_status"
+                label="Statut de paiement"
+              ></v-text-field>
+            </v-col>
+  
+            <v-col cols="12" md="6">
+              <v-text-field
+                v-model="record.rental_status"
+                label="Statut de location"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </template>
+  
+        <v-divider></v-divider>
+  
+        <v-card-actions class="bg-surface-light">
+          <v-btn text="Annuler" variant="plain" @click="dialog = false"></v-btn>
+          <v-spacer></v-spacer>
+          <v-btn text="Enregistrer" @click="save"></v-btn>
+        </v-card-actions>
+      </v-card>
+  
+      <div
+        v-if="showStartDatePicker"
+        ref="startDatePicker"
+        :style="startDatePickerStyles"
+        style="
+          z-index: 1000;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <v-date-picker
+          v-model="record.start_date"
+          color="primary"
+          :min="new Date()"
+          show-adjacent-months
+        ></v-date-picker>
+      </div>
+
+      <div
+        v-if="showEndDatePicker"
+        ref="endDatePicker"
+        :style="endDatePickerStyles"
+        style="
+          z-index: 1000;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <v-date-picker
+          v-model="record.end_date"
+          color="primary"
+          :min="new Date()"
+          show-adjacent-months
+        ></v-date-picker>
+      </div>
+    </v-dialog>
+  </template>
+  
+  <script setup>
+  import { ref, computed, watch } from "vue";
+  import { useFetch } from "@/composables/useFetch";
+  import { useFloating } from "@floating-ui/vue";
+  
+  // Floating date picker pour lifetime
+  const startDateTrigger = ref(null);
+  const startDatePicker = ref(null);
+  const endDateTrigger = ref(null);
+  const endDatePicker = ref(null);
+  const showStartDatePicker = ref(false);
+  const showEndDatePicker = ref(false);
+  const dialog = ref(false);
+  const isEditing = ref(false);
+  const rentals = ref([]);
+  const record = ref(getEmptyRecord());
+  
+  const { floatingStyles: startDatePickerStyles } = useFloating(
+    startDateTrigger,
+    startDatePicker,
+    {
+      placement: "bottom-start",
+    },
+  );
+
+  const { floatingStyles: endDatePickerStyles } = useFloating(
+    endDateTrigger,
+    endDatePicker,
+    {
+      placement: "bottom-start",
+    },
+  );
+  
+  function toggleStartDatePicker() {
+    showStartDatePicker.value = !showStartDatePicker.value;
+  }
+
+  function toggleEndDatePicker() {
+    showEndDatePicker.value = !showEndDatePicker.value;
+  }
+  
+  watch(
+    () => record.value.start_date,
+    () => {
+      showStartDatePicker.value = false;
+    },
+  );
+
+  watch(
+    () => record.value.end_date,
+    () => {
+      showEndDatePicker.value = false;
+    },
+  );
+  
+  const { fetchData } = useFetch();
+  
+  const rentalStatusColors = {
+    Terminé: "green",
+    Annulé: "red",
+    "En cours": "orange",
+  };
+  
+  const headers = [
+    { title: "ID Location", key: "rental_id" },
+    { title: "ID Compte", key: "account_id" },
+    { title: "Statut de paiement", key: "payment_status" },
+    { title: "Statut de location", key: "rental_status" },
+    {
+      title: "Date de début",
+      key: "start_date",
+      format: (v) => new Date(v).toLocaleDateString("fr-FR"),
+    },
+    {
+      title: "Date de fin",
+      key: "end_date",
+      format: (v) => new Date(v).toLocaleDateString("fr-FR"),
+    },
+    { title: "Actions", key: "actions", align: "end" },
+  ];
+  
+  // Chargement initial des données
+  loadRentals();
+  
+  async function loadRentals() {
+    try {
+      const data = await fetchData("/rentals");
+      rentals.value = data;
+    } catch (error) {
+      console.error("Erreur de chargement:", error);
+    }
+  }
+  
+  function add() {
+    // Ouvre la modal et efface les champs
+    isEditing.value = false;
+    record.value = getEmptyRecord();
+    dialog.value = true;
+  }
+  
+  function edit(item) {
+    // Ouvre la modal et remplit les champs avec les données de l'élément sélectionné
+    isEditing.value = true;
+    record.value = { ...item };
+    dialog.value = true;
+  }
+  
+  async function save() {
+    try {
+      if (isEditing.value) {
+        await fetchData(`/rentals/${record.value.rental_id}`, {
+          method: "PUT",
+          body: JSON.stringify(record.value),
+        });
+      } else {
+        await fetchData("/rentals", {
+          method: "POST",
+          body: JSON.stringify(record.value),
+        });
+      }
+      await loadRentals();
+      dialog.value = false;
+    } catch (error) {
+      console.error("Erreur de sauvegarde:", error);
+    }
+  }
+  
+  async function remove(id) {
+    if (confirm("Confirmer la suppression ?")) {
+      try {
+        await fetchData(`/rentals/${id}`, {
+          method: "DELETE",
+        });
+        await loadBicycles();
+      } catch (error) {
+        console.error("Erreur de suppression:", error);
+      }
+    }
+  }
+  
+  function getEmptyRecord() {
+    return {
+      account_id: null,
+      start_date: null,
+      end_date: null,
+      payment_status: "Non payé",
+      rental_status: "En cours",
+    };
+  }
+  </script>
+  
+  <style scoped lang="scss">
+  .endDate-input, .startDate-input {
+    cursor: pointer;
+    .v-input__control {
+      pointer-events: none;
+    }
+  }
+  </style>
+  

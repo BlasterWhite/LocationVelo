@@ -10,6 +10,7 @@ import AssistanceView from "../views/AssistanceView.vue";
 import AdminView from "../views/AdminView.vue";
 import AdminBicyclesView from "../views/admin/BicycleAdminView.vue";
 import AdminAccountView from "../views/admin/AccountAdminView.vue";
+import AdminLocationsView from "../views/admin/RentalAdminView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -84,7 +85,7 @@ const router = createRouter({
         {
           path: "locations",
           name: "admin-locations",
-          component: AdminBicyclesView,
+          component: AdminLocationsView,
           meta: {
             requiresAuth: true,
           },
