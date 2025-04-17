@@ -2,17 +2,21 @@
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useFetch } from "@/composables/useFetch";
-import { useCartStore } from '@/stores/cartStore'
-import { storeToRefs } from 'pinia'
+import { useCartStore } from '@/stores/cartStore';
+import { storeToRefs } from 'pinia';
 import FiltersMenu from "@/components/FiltersMenu.vue";
 import bicycleCard from "../components/BicycleCard.vue";
 
-const cartStore = useCartStore()
-const { cart } = storeToRefs(cartStore)
+const cartStore = useCartStore();
+const { cart } = storeToRefs(cartStore);
 
 const bookingDialog = ref(false);
 const bicycleSelected = ref({});
 const tableBicyclesSelected = ref([]);
+
+const showSnackbar = ref(false);
+const snackbarMessage = ref('');
+const snackbarColor = ref('info');
 
 const route = useRoute();
 route.query.startDate = route.query.startDate
@@ -144,9 +148,20 @@ function toggleDialog(bicycle) {
   tableBicyclesSelected.value = bicyclesData.value.filter((bicycle) => bicycle.brand===bicycleSelected.value.brand && bicycle.model===bicycleSelected.value.model);
 }
 
-function addBicycleToCart(bicycle) {
-  cartStore.addToCart(bicycle);
-  console.log('🛒 Panier mis à jour :', cartStore.cart)
+function addBicycleToCart(addedBicycle) {
+  const alreadyInCart = cartStore.cart.some((item) => item.bicycle_id === addedBicycle.bicycle_id);
+
+  if(alreadyInCart) {
+    snackbarMessage.value = 'Ce vélo est déjà dans le panier.';
+    snackbarColor.value = 'error';
+    showSnackbar.value = true;
+    return;
+  }
+
+  snackbarMessage.value = 'Vélo ajouté au panier.'
+  snackbarColor.value = 'success';
+  showSnackbar.value = true;
+  cartStore.addToCart(addedBicycle);
 }
 
 watch(
@@ -233,6 +248,14 @@ watch(
         </v-card-text>
       </v-card>
     </v-dialog>
+    <v-snackbar
+      v-model="showSnackbar"
+      timeout="2500"
+      :color="snackbarColor"
+      location="bottom right"
+    >
+      {{ snackbarMessage }}
+    </v-snackbar>
   </div>
 </template>
 
