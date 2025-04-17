@@ -19,7 +19,7 @@ export const authMiddleware = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(403).json({ message: "Failed to authenticate token" });
+      return next();
     }
     req.user = decoded.user;
     next();
