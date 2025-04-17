@@ -2,8 +2,13 @@
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useFetch } from "@/composables/useFetch";
+import { useCartStore } from '@/stores/cartStore'
+import { storeToRefs } from 'pinia'
 import FiltersMenu from "@/components/FiltersMenu.vue";
 import bicycleCard from "../components/BicycleCard.vue";
+
+const cartStore = useCartStore()
+const { cart } = storeToRefs(cartStore)
 
 const bookingDialog = ref(false);
 const bicycleSelected = ref({});
@@ -139,6 +144,11 @@ function toggleDialog(bicycle) {
   tableBicyclesSelected.value = bicyclesData.value.filter((bicycle) => bicycle.brand===bicycleSelected.value.brand && bicycle.model===bicycleSelected.value.model);
 }
 
+function addBicycleToCart(bicycle) {
+  cartStore.addToCart(bicycle);
+  console.log('🛒 Panier mis à jour :', cartStore.cart)
+}
+
 watch(
   () => filterData.value,
   (newValue) => {
@@ -214,6 +224,7 @@ watch(
                     icon="mdi-plus"
                     size="small"
                     variant="text"
+                    @click="addBicycleToCart(bicycle)"
                   ></v-btn>
                 </td>
               </tr>
