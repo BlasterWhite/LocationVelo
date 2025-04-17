@@ -28,10 +28,25 @@
           </v-toolbar>
         </template>
 
-        <template v-slot:item.rental_status="{ value }">
-        <v-chip :color="rentalStatusColors[value]" border="thin opacity-25">
-          {{ value }}
-        </v-chip>
+        <template v-slot:item.rental_status="{ item }">
+            <div class="d-flex align-center ga-2">
+                <v-chip :color="rentalStatusColors[item.rental_status]" border="thin opacity-25">
+                {{ item.rental_status }}
+                </v-chip>
+                
+                <v-btn
+                v-if="item.rental_status === 'En cours'"
+                @click="completeRental(item.rental_id)"
+                color="green-darken-2"
+                variant="tonal"
+                size="x-small"
+                icon
+                rounded
+                >
+                <v-icon>mdi-check</v-icon>
+                <v-tooltip activator="parent" location="top">Marquer comme terminé</v-tooltip>
+                </v-btn>
+            </div>
         </template>
   
         <template v-slot:item.actions="{ item }">
@@ -319,6 +334,19 @@
       payment_status: "Non payé",
       rental_status: "En cours",
     };
+  }
+
+  async function completeRental(rentalId) {
+    try {
+        await fetchData(`/rentals/${rentalId}`, {
+        method: "PUT",
+        body: JSON.stringify({ rental_status: "Terminé" })
+        });
+        await loadRentals();
+    } 
+    catch (error) {
+        console.error("Erreur:", error);
+    }
   }
   </script>
   
