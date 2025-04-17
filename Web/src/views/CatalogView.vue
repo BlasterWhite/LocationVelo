@@ -5,6 +5,10 @@ import { useFetch } from "@/composables/useFetch";
 import FiltersMenu from "@/components/FiltersMenu.vue";
 import bicycleCard from "../components/BicycleCard.vue";
 
+const bookingDialog = ref(false);
+const bicycleSelected = ref({});
+const tableBicyclesSelected = ref([]);
+
 const route = useRoute();
 route.query.startDate = route.query.startDate
   ? new Date(route.query.startDate)
@@ -129,6 +133,12 @@ function calculateBicycles() {
   bicycles.value = localBicycle;
 }
 
+function toggleDialog(bicycle) {
+  bookingDialog.value = !bookingDialog.value;
+  bicycleSelected.value = bicycle;
+  tableBicyclesSelected.value = bicyclesData.value.filter((bicycle) => bicycle.brand===bicycleSelected.value.brand && bicycle.model===bicycleSelected.value.model);
+}
+
 watch(
   () => filterData.value,
   (newValue) => {
@@ -157,9 +167,61 @@ watch(
           :model="bicycleCard.model"
           :price-per-km="bicycleCard.price_per_day"
           :power="bicycleCard.electric_assistance"
+          @click="toggleDialog(bicycleCard)"
         />
       </div>
     </main>
+    <v-dialog v-model="bookingDialog" max-width="600">
+      <v-card title="Réserver un vélo">
+        <v-card-text>
+          <v-row>
+            <v-col cols="6">
+              <div><strong>Marque :</strong> {{ bicycleSelected.brand }}</div>
+              <div><strong>Modèle :</strong> {{ bicycleSelected.model }}</div>
+              <div><strong>Type :</strong> {{ bicycleSelected.bicycle_type }}</div>
+              <div><strong>Assistance électrique :</strong> {{ bicycleSelected.electric_assistance?'Oui':'Non' }}</div>
+              <div><strong>Prix (par jour) :</strong> {{ bicycleSelected.price_per_day }}€</div>
+              <div><strong>Cycle de révision :</strong> {{ bicycleSelected.revision_cycle }} km</div>
+            </v-col>
+            <v-col cols="6">
+              <v-img
+                :src="bicycleSelected.image"
+                height="200"
+                contain
+                
+              ></v-img>
+            </v-col>
+          </v-row>
+          <v-table class="mt-4">
+            <thead>
+              <tr>
+                <th>Compteur</th>
+                <th>Dernière révision</th>
+                <th>Durée de vie</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(bicycle, index) in tableBicyclesSelected"
+                :key="index"
+              >
+                <td>{{ bicycle.counter_km }} km</td>
+                <td>{{ bicycle.last_km_service }} km</td>
+                <td>{{ new Date(bicycle.lifetime).getFullYear() }}</td>
+                <td>
+                  <v-btn
+                    icon="mdi-plus"
+                    size="small"
+                    variant="text"
+                  ></v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
