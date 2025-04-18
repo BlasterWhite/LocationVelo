@@ -5,7 +5,7 @@ export const createNewsletter = async (req, res) => {
 
   const userSubscribed = await accountModel.getAccountNewsletter();
 
-  if (!userSubscribed) {
+  if (!userSubscribed || userSubscribed.length === 0) {
     return res
       .status(404)
       .json({ message: "No users subscribed to the newsletter" });
