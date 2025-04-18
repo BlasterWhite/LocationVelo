@@ -15,10 +15,19 @@ export function useFetch() {
       headers,
     });
     if (!response.ok) {
-      const errorData = await response.json();
-      return errorData.error || "An error occurred";
+      try {
+        const errorData = await response.json();
+        return errorData.error || "An error occurred";
+      } catch (error) {
+        return;
+      }
     }
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch (error) {
+      data = {};
+    }
     return data;
   };
 
