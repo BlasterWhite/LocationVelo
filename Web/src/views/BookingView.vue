@@ -70,7 +70,6 @@ const headers = [
 ];
 
 const submitReview = async () => {
-  debugger;
 
   if (rating.value === 0) {
     return;
