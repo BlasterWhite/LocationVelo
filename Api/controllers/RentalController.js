@@ -1,6 +1,7 @@
 import * as rentalModel from "../models/RentalModel.js";
 import * as accountModel from "../models/AccountModel.js";
 import * as bicycleModel from "../models/BicycleModel.js";
+import * as reviewModel from "../models/ReviewModel.js";
 
 /**
  * Get all rentals
@@ -65,18 +66,19 @@ export const getRentals = async (req, res) => {
 
 export const getRentalAssociationByRentalId = async (req, res) => {
   const rentalId = req.params.rental_id;
-  if(!rentalId) {
+  if (!rentalId) {
     res.status(400).send("Rental id not provided");
     return;
   }
-  const rentalAssociation = await rentalModel.getRentalAssociationByRentalId(rentalId);
+  const rentalAssociation =
+    await rentalModel.getRentalAssociationByRentalId(rentalId);
   if (!rentalAssociation || rentalAssociation.length === 0) {
     res.status(404).send("Rental association not found");
     return;
   }
-  
+
   res.json(rentalAssociation);
-}
+};
 
 /**
  * Get a rental by its id
@@ -328,7 +330,42 @@ export const deleteRentalAssociationsByRentalId = async (req, res) => {
   const rentalId = req.params.rentalId;
 
   rentalModel.deleteRentalByRentalId(rentalId);
- 
+
   res.status(204).json({});
 };
 
+export const getRentalByAccountId = async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  const accountId = user.account_id;
+
+  const rentals = await rentalModel.getRentalByAccountId(accountId);
+  if (!rentals || rentals.length === 0) {
+    res.status(404).send("Rentals not found");
+    return;
+  }
+
+  // Get rentals associated bicycles
+  for (const rental of rentals) {
+    let rentalAssociations = await rentalModel.getRentalAssociationByRentalId(
+      rental.rental_id
+    );
+    let review = await reviewModel.getReviewsByRentalId(rental.rental_id);
+    rental.review = review ? review : null;
+    rental.bicycles = [];
+    for (const rentalAssociation of rentalAssociations) {
+      const bicycle = await bicycleModel.getBicycleById(
+        rentalAssociation.bicycle_id
+      );
+      if (bicycle) {
+        rental.bicycles.push(bicycle);
+      }
+    }
+  }
+
+  res.json(rentals);
+};

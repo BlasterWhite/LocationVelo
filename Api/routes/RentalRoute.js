@@ -9,6 +9,7 @@ import {
   deleteRentalAssociation,
   deleteRentalAssociationsByRentalId,
   getRentalAssociationByRentalId,
+  getRentalByAccountId,
 } from "../controllers/RentalController.js";
 
 const router = express.Router();
@@ -16,6 +17,7 @@ const router = express.Router();
 // Route to get all rentals
 router.get("/", getRentals);
 // Route to get a rental by ID
+router.get("/account", getRentalByAccountId);
 router.get("/:id", getRentalById);
 // Route to create a new rental association
 router.post("/associate", createRentalAssociation);
