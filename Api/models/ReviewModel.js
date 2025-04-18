@@ -33,7 +33,7 @@ export const createReview = async (reviewData) => {
         rental_id, rate, description, date_review
       ) VALUES ($1, $2, $3, $4) 
       RETURNING *`,
-    [rental_id, rate, description, date_review],
+    [rental_id, rate, description, date_review]
   );
   return result.rows[0];
 };
@@ -51,7 +51,7 @@ export const updateReview = async (id, reviewData) => {
       SET rental_id = $1, rate = $2, description = $3, date_review = $4
       WHERE review_id = $5
       RETURNING *`,
-    [rental_id, rate, description, date_review, id],
+    [rental_id, rate, description, date_review, id]
   );
   return result.rows[0];
 };
@@ -66,4 +66,16 @@ export const deleteReview = async (id) => {
     id,
   ]);
   return result.rowCount > 0;
+};
+
+/**
+ * Get reviews by rental id
+ * @param {Number} rentalId id of the rental
+ * @returns {Array} array of reviews for the rental
+ */
+export const getReviewsByRentalId = async (rentalId) => {
+  const result = await db.query("SELECT * FROM review WHERE rental_id = $1", [
+    rentalId,
+  ]);
+  return result.rows;
 };

@@ -1,4 +1,5 @@
 <script setup>
+import { useCartStore } from "@/stores/cartStore";
 const props = defineProps({
   image: {
     type: String,
@@ -28,7 +29,19 @@ const props = defineProps({
     type: Boolean,
     required: false,
   },
+  startDate: Date,
+  endDate: Date,
 });
+
+const cartStore = useCartStore();
+
+const addToCart = () => {
+  try {
+    cartStore.addItem(props);
+  } catch (error) {
+    alert(error.message);
+  }
+};
 </script>
 
 <template>
@@ -46,6 +59,7 @@ const props = defineProps({
       <div v-if="power" class="detail">
         <span class="label">Assistance électrique :</span> Oui
       </div>
+      <button @click="addToCart">Ajouter au panier</button>
     </div>
   </div>
 </template>
@@ -56,7 +70,7 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   width: 350px;
-  height: 525px;
+  height: 555px;
   border-radius: 16px;
   box-shadow: 0 1px 4px 2px rgba(0, 0, 0, 0.25);
   gap: 10px;

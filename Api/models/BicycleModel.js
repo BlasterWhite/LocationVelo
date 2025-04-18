@@ -57,7 +57,7 @@ export const createBicycle = async (bicycleData) => {
       last_km_service,
       counter_km,
       electric_assistance,
-    ],
+    ]
   );
   return result.rows[0];
 };
@@ -99,7 +99,7 @@ export const updateBicycle = async (id, bicycleData) => {
       counter_km,
       electric_assistance,
       id,
-    ],
+    ]
   );
   return result.rows[0]; // Return the updated bicycle
 };
@@ -112,7 +112,7 @@ export const updateBicycle = async (id, bicycleData) => {
 export const deleteBicycle = async (id) => {
   const result = await db.query(
     "DELETE FROM bicycle WHERE bicycle_id = $1 RETURNING *",
-    [id],
+    [id]
   );
   return result.rowCount > 0; // Returns true if a row was deleted
 };
@@ -123,7 +123,7 @@ export const deleteBicycle = async (id) => {
  */
 export const getBicyclePricing = async () => {
   const result = await db.query(
-    "SELECT MAX(price_per_day) AS max_price, MIN(price_per_day) AS min_price, AVG(price_per_day) AS avg_price FROM bicycle",
+    "SELECT MAX(price_per_day) AS max_price, MIN(price_per_day) AS min_price, AVG(price_per_day) AS avg_price FROM bicycle"
   );
   return result.rows;
 };
