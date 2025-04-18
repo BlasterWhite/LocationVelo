@@ -17,7 +17,7 @@
         balades du week-end ou vos aventures plus longues. Que vous soyez un
         cycliste occasionnel ou un amateur confirmé, nous mettons un point
         d’honneur à vous fournir des vélos parfaitement entretenus, confortables
-        et fiable.
+        et fiables.
       </p>
       <br />
       <p>
