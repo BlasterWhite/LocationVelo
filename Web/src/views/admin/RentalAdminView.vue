@@ -10,7 +10,7 @@
             <v-toolbar-title>
               <v-icon
                 color="medium-emphasis"
-                icon="mdi-bike"
+                icon="material-symbols:bike-lane-rounded"
                 size="x-small"
                 start
               ></v-icon>
