@@ -1,129 +1,70 @@
-# LocationVelo
+# README - Guide d'Utilisation
 
-## 🧠 **Code Quality Guidelines – Vue.js + Node.js + PostgreSQL**
+Ce guide explique comment lancer la base de données et exécuter l'application en mode développement ou production.
 
-### 📁 Structure du Projet
+---
 
-**Frontend (Vue.js)** :
+## Prérequis
 
-```
-/src
-  /components       -> Composants Vue réutilisables
-  /views            -> Pages principales
-  /assets           -> Fichiers statiques
-  /store            -> (Pinia) pour gestion d'état
-  /router           -> Configuration des routes
-```
+- **Docker** : Installé sur votre machine. [Guide d'installation Docker](https://docs.docker.com/get-docker/)
+- **Node.js** (v18+) et **npm** : Pour exécuter l'application. [Télécharger Node.js](https://nodejs.org/)
+- **Postgresql** pour la base de données [Télécharger Postgresql](https://www.postgresql.org/download/)
 
-**Backend (Node.js + Express)** :
 
-```
-/src
-  /controllers      -> Logique métier
-  /routes           -> Définition des endpoints
-  /models           -> Requêtes SQL
-  /middlewares      -> Middlewares Express (auth, validation, etc.)
-  /utils            -> Fonctions utilitaires
-  /config           -> Configuration (env, db, etc.)
+
+
+---
+
+## Installation
+
+1. **Cloner le dépôt** :
+```bash
+git clone https://github.com/BlasterWhite/LocationVelo.git
+cd LocationVelo
 ```
 
----
-
-## 🔤 **Conventions de nommage**
-
-### ✅ Variables, Fonctions, Constantes
-
-- **camelCase** pour les variables, fonctions et paramètres  
-  ➤ `const userList = []`  
-  ➤ `function fetchUserById(id) {}`
-
-- **UPPER_CASE_SNAKE** pour les constantes globales  
-  ➤ `const MAX_RETRIES = 5;`
-
-- **Pas de noms en français** : toutes les variables/fonctions doivent être **en anglais**
-
----
-
-## 📦 **Composants Vue.js**
-
-- **Nom des fichiers** : `PascalCase.vue` (ex: `UserProfile.vue`)
-- **Nom des composants** : également en PascalCase
-
-  ```vue
-  <template>
-    <UserCard :user="user" />
-  </template>
-  ```
-
-- **Props** : camelCase côté JS / kebab-case dans le template HTML
-
-  ```vue
-  props: { userId: Number }
-  <!-- usage -->
-  <UserCard user-id="123" />
-  ```
-
-- **Dossier par composant si nécessaire** :
-  ```
-  /UserCard
-    ├─ index.vue
-    ├─ UserCard.scss
-  ```
-
----
-
-## 📑 **Commentaires & Documentation**
-
-### 🧾 JSDoc obligatoire :
-
-Exemple :
-
-```js
-/**
- * Fetch a user by ID
- * @param {number} id - User ID
- * @returns {Promise<Object>} user data
- */
-async function fetchUserById(id) { ... }
+2. **Installer les dépendances**:
+```bash
+npm install
 ```
 
----
+## Utilisation
 
-## 🧼 **Bonnes pratiques générales**
+1. **Lancement de la Base de Données (via Docker)**
 
-- **1 fonction = 1 responsabilité**
-- Limitez les fonctions à ~50 lignes
-- Utilisez **async/await**, évitez les callbacks imbriqués
-- **Sanitisez les entrées** utilisateur (surtout côté Node.js)
+Exécutez la commande suivante pour démarrer la base de données en arrière-plan :
 
----
+```bash
+docker compose up -d
+```
 
-## 🛠️ **Outils recommandés**
+## Vérification :
+Assurez-vous que les conteneurs Docker sont actifs avec :
 
-### 🔍 Lint & Format
+```bash
+docker ps
+```
 
-- **ESLint** avec un preset comme Airbnb ou StandardJS
-- **Prettier** pour formatage automatique (intégré dans votre IDE)
+2. **Lancement en Mode Développement**
 
-### 🌐 API
+Utilisez cette commande pour démarrer l'application avec un rechargement automatique :
+```bash
+npm run dev
+```
 
-- Utiliser **Express**
-- Ajoutez une **validation des requêtes** via `zod` ou `express-validator`
-- Documenter les endpoints avec **Swagger** ou **Redoc**
+L'application sera accessible sur http://localhost:5173.
 
----
+3. **Lancement en Mode Production**
 
-## 🗃️ **Base de données PostgreSQL**
+Pour une utilisation en production, exécutez :
+```bash
+npm run start
+```
 
-- Les noms de tables : **snake_case**
-- Les champs : **snake_case**
-- Relations claires avec foreign keys et index
+## Remarque :
 
----
+Fichier d'environnement :
+Créez un fichier .env à la racine du projet pour configurer les variables d'environnement (ex: DB_USER, PORT, etc).
 
-## 🛡️ Sécurité
-
-- **.env** pour variables sensibles
-- Ne jamais **commiter des secrets**
-- Utiliser `cors` et limiter le rate API
-- Hasher les mots de passe (`bcrypt`)
+Ports utilisés :
+Vérifiez que les ports utilisés par l'application et la base de données ne sont pas bloqués.
