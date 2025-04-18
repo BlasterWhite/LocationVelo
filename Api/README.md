@@ -8,16 +8,20 @@ Ce guide explique comment lancer la base de données et exécuter l'application 
 
 - **Docker** : Installé sur votre machine. [Guide d'installation Docker](https://docs.docker.com/get-docker/)
 - **Node.js** (v18+) et **npm** : Pour exécuter l'application. [Télécharger Node.js](https://nodejs.org/)
+- **Postgresql** pour la base de données [Télécharger Postgresql](https://www.postgresql.org/download/)
+
+
+
 
 ---
 
 ## Installation
 
 1. **Cloner le dépôt** :
-   ```bash
-   git clone https://github.com/BlasterWhite/LocationVelo.git
-   cd LocationVelo
-   ```
+```bash
+git clone https://github.com/BlasterWhite/LocationVelo.git
+cd LocationVelo
+```
 
 2. **Installer les dépendances**:
 ```bash
