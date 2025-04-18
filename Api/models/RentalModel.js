@@ -6,7 +6,7 @@ import db from "../config/db.js";
  */
 export const getRentals = async () => {
   const result = await db.query(
-    "SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id",
+    "SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id"
   );
   return result.rows;
 };
@@ -19,7 +19,7 @@ export const getRentals = async () => {
 export const getRentalById = async (id) => {
   const result = await db.query(
     "SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id WHERE r.rental_id = $1",
-    [id],
+    [id]
   );
   return result.rows;
 };
@@ -32,7 +32,7 @@ export const getRentalById = async (id) => {
 export const getRentalByBicycleId = async (bicycle_id) => {
   const result = await db.query(
     "SELECT r.rental_id, account_id, start_date, end_date, payment_status, rental_status, b.bicycle_id, bicycle_type, brand, model, lifetime, revision_cycle, last_km_service, counter_km, status, electric_assistance FROM rental r LEFT JOIN rental_association ra ON ra.rental_id=r.rental_id LEFT JOIN bicycle b ON b.bicycle_id=ra.bicycle_id WHERE r.rental_id = $1",
-    [id],
+    [id]
   );
   return result.rows;
 };
@@ -47,11 +47,11 @@ export const getRentalByBicycleId = async (bicycle_id) => {
 export const getAllUnavailableRentalsByDate = async (
   bicycle_id,
   start_date,
-  end_date,
+  end_date
 ) => {
   const result = await db.query(
     "SELECT r.rental_id, r.account_id, r.start_date, r.end_date, r.payment_status, r.rental_status FROM rental r JOIN rental_association ra ON ra.rental_id=r.rental_id WHERE ra.bicycle_id = $1 AND ((start_date <= $2 AND end_date >= $2) OR (start_date <= $3 AND end_date >= $3))",
-    [bicycle_id, start_date, end_date],
+    [bicycle_id, start_date, end_date]
   );
   return result.rows;
 };
@@ -65,7 +65,7 @@ export const getAllUnavailableRentalsByDate = async (
 export const getRentalAssociationByIds = async (rental_id, bicycle_id) => {
   const result = await db.query(
     "SELECT * FROM rental_association WHERE rental_id = $1 AND bicycle_id = $2",
-    [rental_id, bicycle_id],
+    [rental_id, bicycle_id]
   );
   return result.rows;
 };
@@ -84,7 +84,7 @@ export const createRental = async (rentalData) => {
             account_id, start_date, end_date, payment_status, rental_status
         ) VALUES ($1, $2, $3, $4, $5) 
         RETURNING *`,
-    [account_id, start_date, end_date, payment_status, rental_status],
+    [account_id, start_date, end_date, payment_status, rental_status]
   );
   return result.rows[0];
 };
@@ -102,7 +102,7 @@ export const createRentalAssociation = async (rentalData) => {
             rental_id, bicycle_id
         ) VALUES ($1, $2) 
         RETURNING *`,
-    [rental_id, bicycle_id],
+    [rental_id, bicycle_id]
   );
   return result.rows[0];
 };
@@ -124,7 +124,7 @@ export const updateRental = async (id, rentalData) => {
             rental_status = $5
         WHERE rental_id = $6
         RETURNING *`,
-    [account_id, start_date, end_date, payment_status, rental_status, id],
+    [account_id, start_date, end_date, payment_status, rental_status, id]
   );
   return result.rows[0] || null; // Return the first row or null if not found
 };
@@ -137,7 +137,7 @@ export const updateRental = async (id, rentalData) => {
 export const deleteRental = async (id) => {
   const result = await db.query(
     `DELETE FROM rental WHERE rental_id = $1 RETURNING *`,
-    [id],
+    [id]
   );
   return result.rowCount > 0; // Return true if a row was deleted
 };
@@ -151,7 +151,20 @@ export const deleteRental = async (id) => {
 export const deleteRentalAssociation = async (rental_id, bicycle_id) => {
   const result = await db.query(
     `DELETE FROM rental_association WHERE rental_id = $1 AND bicycle_id = $2 RETURNING *`,
-    [rental_id, bicycle_id],
+    [rental_id, bicycle_id]
+  );
+  return result.rowCount > 0; // Return true if a row was deleted
+};
+
+/**
+ * Delete rental associations by its rental id
+ * @param {Number} rental_id id of the rental
+ * @returns {Boolean} true if deleted, false otherwise
+ */
+export const deleteRentalByRentalId = async (rental_id) => {
+  const result = await db.query(
+    `DELETE FROM rental_association WHERE rental_id = $1 RETURNING *`,
+    [rental_id]
   );
   return result.rowCount > 0; // Return true if a row was deleted
 };
