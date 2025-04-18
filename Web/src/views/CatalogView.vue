@@ -7,9 +7,6 @@ import { storeToRefs } from "pinia";
 import FiltersMenu from "@/components/FiltersMenu.vue";
 import bicycleCard from "../components/BicycleCard.vue";
 import CartIcon from "../components/CartIcon.vue";
-import { useCartStore } from "@/stores/cartStore";
-
-const cartStore = useCartStore();
 
 const cartStore = useCartStore();
 const { cart } = storeToRefs(cartStore);

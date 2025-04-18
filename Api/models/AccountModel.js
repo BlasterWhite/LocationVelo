@@ -18,7 +18,7 @@ const fieldsToSelect = [
  */
 export const getAccounts = async () => {
   const result = await db.query(
-    `SELECT ${fieldsToSelect.join(",")} FROM account`,
+    `SELECT ${fieldsToSelect.join(",")} FROM account`
   );
   return result.rows;
 };
@@ -31,7 +31,7 @@ export const getAccounts = async () => {
 export const getAccountById = async (id) => {
   const result = await db.query(
     `SELECT ${fieldsToSelect.join(",")} FROM account WHERE account_id = $1`,
-    [id],
+    [id]
   );
   return result?.rows?.[0] || null; // Return the first row or null if not found
 };
@@ -68,7 +68,7 @@ export const createAccount = async (accountData) => {
       account_role,
       subscribe,
       hashedPassword,
-    ],
+    ]
   );
   return result.rows[0];
 };
@@ -101,7 +101,7 @@ export const updateAccount = async (id, accountData) => {
                 subscribe = $7
             WHERE account_id = $8
             RETURNING ${fieldsToSelect.join(",")}`,
-    [first_name, last_name, email, phone, address, account_role, subscribe, id],
+    [first_name, last_name, email, phone, address, account_role, subscribe, id]
   );
   return result.rows[0];
 };
@@ -114,7 +114,7 @@ export const updateAccount = async (id, accountData) => {
 export const deleteAccount = async (id) => {
   const result = await db.query(
     `DELETE FROM account WHERE account_id = $1 RETURNING ${fieldsToSelect.join(",")}`,
-    [id],
+    [id]
   );
   return result.rowCount > 0; // Return true if at least one row was deleted
 };
@@ -127,7 +127,7 @@ export const deleteAccount = async (id) => {
 export const getAccountByEmail = async (email) => {
   const result = await db.query(
     `SELECT ${fieldsToSelect.join(",")} FROM account WHERE email = $1`,
-    [email],
+    [email]
   );
   return result?.rows?.[0] || null; // Return the first row or null if not found
 };
@@ -142,4 +142,15 @@ export const _getAccountByEmailPrivate = async (email) => {
     email,
   ]);
   return result?.rows?.[0] || null; // Return the first row or null if not found
+};
+
+/**
+ * Get all accounts that are subscribed to the newsletter
+ * @returns {Array} array of accounts
+ */
+export const getAccountNewsletter = async () => {
+  const result = await db.query(
+    `SELECT ${fieldsToSelect.join(",")} FROM account WHERE subscribe = true`
+  );
+  return result.rows;
 };

@@ -11,6 +11,7 @@ import AssistanceView from "../views/AssistanceView.vue";
 import AdminView from "../views/AdminView.vue";
 import AdminBicyclesView from "../views/admin/BicycleAdminView.vue";
 import AdminAccountView from "../views/admin/AccountAdminView.vue";
+import NewsletterAdminView from "../views/admin/NewsletterAdminView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -94,6 +95,14 @@ const router = createRouter({
           path: "locations",
           name: "admin-locations",
           component: AdminBicyclesView,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: "newsletter",
+          name: "admin-newsletter",
+          component: NewsletterAdminView,
           meta: {
             requiresAuth: true,
           },
