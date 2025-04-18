@@ -10,9 +10,6 @@ Ce guide explique comment lancer la base de données et exécuter l'application 
 - **Node.js** (v18+) et **npm** : Pour exécuter l'application. [Télécharger Node.js](https://nodejs.org/)
 - **Postgresql** pour la base de données [Télécharger Postgresql](https://www.postgresql.org/download/)
 
-
-
-
 ---
 
 ## Installation
@@ -25,46 +22,82 @@ cd LocationVelo
 
 2. **Installer les dépendances**:
 ```bash
+# Frontend (Web)
+cd Web
 npm install
+
+# Backend (API)
+cd ../API
+npm install
+
+# Retour à la racine
+cd ..
 ```
+
+---
 
 ## Utilisation
 
-1. **Lancement de la Base de Données (via Docker)**
+1. **Configuration de l'environnement**
+   - Créez vos fichiers `.env` en copiant les modèles :
+   ```bash
+   cp Web/.env.example Web/.env
+   cp API/.env.example API/.env
+   ```
+   - Adaptez les variables dans chaque fichier `.env` selon vos besoins
 
-Exécutez la commande suivante pour démarrer la base de données en arrière-plan :
-
+2. **Lancement de la Base de Données (via Docker)**
 ```bash
 docker compose up -d
 ```
 
-## Vérification :
-Assurez-vous que les conteneurs Docker sont actifs avec :
-
+**Vérification** :
 ```bash
 docker ps
 ```
 
-2. **Lancement en Mode Développement**
+3. **Lancement en Mode Développement**
 
-Utilisez cette commande pour démarrer l'application avec un rechargement automatique :
+Frontend (Web) :
 ```bash
+cd Web
+npm run dev
+```
+
+Backend (API) :
+```bash
+cd ../API
 npm run dev
 ```
 
 L'application sera accessible sur http://localhost:5173.
 
-3. **Lancement en Mode Production**
+4. **Lancement en Mode Production**
 
-Pour une utilisation en production, exécutez :
+Frontend :
 ```bash
+cd Web
 npm run start
 ```
 
-## Remarque :
+Backend :
+```bash
+cd ../API
+npm run start
+```
 
-Fichier d'environnement :
-Créez un fichier .env à la racine du projet pour configurer les variables d'environnement (ex: DB_USER, PORT, etc).
+---
 
-Ports utilisés :
-Vérifiez que les ports utilisés par l'application et la base de données ne sont pas bloqués.
+## Remarques
+
+- **Fichiers d'environnement** :
+  - Les fichiers `.env` doivent être créés dans les dossiers Web et API
+  - Utilisez les fichiers `.env.example` comme modèle pour chaque service
+
+- **Ports utilisés** :
+  - Frontend : 5173 (dev) / 4173 (build preview)
+  - Backend : 3000 par défaut
+  - Base de données : 5432
+
+- **Dépendances** :
+  - Les dépendances doivent être installées séparément dans chaque dossier (Web et API)
