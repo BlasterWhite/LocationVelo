@@ -142,3 +142,42 @@ export const getAllTypes = async () => {
   const result = await db.query("SELECT DISTINCT bicycle_type FROM bicycle");
   return result.rows;
 };
+
+export const getAvailableBicyclesOnPeriod = async (startDate, endDate) => {
+  const result = await db.query(
+    `SELECT * FROM bicycle b
+    LEFT JOIN rental_association ra ON ra.bicycle_id=b.bicycle_id
+    LEFT JOIN rental r ON r.rental_id=ra.rental_id
+    LEFT JOIN maintenance m ON m.bicycle_id=b.bicycle_id
+    WHERE ((r.start_date IS NULL AND r.end_date IS NULL) AND
+    (m.start_date IS NULL AND m.end_date IS NULL))
+    OR (
+        ((
+        r.start_date < $1 AND 
+        r.start_date < $2 AND
+        r.end_date < $1 AND 
+        r.end_date < $2
+        ) OR
+        (
+            r.start_date > $1 AND 
+            r.start_date > $2 AND
+            r.end_date > $1 AND 
+            r.end_date > $2
+        )) AND
+        ((
+            m.start_date < $1 AND 
+            m.start_date < $2 AND
+            m.end_date < $1 AND 
+            m.end_date < $2
+        ) OR
+        (
+            m.start_date > $1 AND 
+            m.start_date > $2 AND
+            m.end_date > $1 AND 
+            m.end_date > $2
+        ))
+    )`,
+    [startDate, endDate]
+  );
+  return result.rows;
+};

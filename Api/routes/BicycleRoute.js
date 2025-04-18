@@ -5,6 +5,7 @@ import {
   createBicycle,
   updateBicycle,
   deleteBicycle,
+  getAvailableBicycleInPeriod,
 } from "../controllers/BicycleController.js";
 
 const router = express.Router();
@@ -19,5 +20,7 @@ router.post("/", createBicycle);
 router.put("/:id", updateBicycle);
 // Route to delete a bicycle by ID
 router.delete("/:id", deleteBicycle);
+// Route to get the available bicycle with date
+router.get("/:startDate/:endDate", getAvailableBicycleInPeriod);
 // Export the router
 export default router;
