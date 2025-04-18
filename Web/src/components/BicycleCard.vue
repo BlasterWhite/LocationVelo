@@ -54,7 +54,7 @@ const addToCart = () => {
       <div class="detail"><span class="label">Marque :</span> {{ brand }}</div>
       <div class="detail"><span class="label">Modèle :</span> {{ model }}</div>
       <div class="detail">
-        <span class="label">Prix par jouenée :</span> {{ pricePerKm }}€
+        <span class="label">Prix par journée :</span> {{ pricePerKm }}€
       </div>
       <div v-if="power" class="detail">
         <span class="label">Assistance électrique :</span> Oui
