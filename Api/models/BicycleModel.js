@@ -37,14 +37,15 @@ export const createBicycle = async (bicycleData) => {
     revision_cycle,
     last_km_service,
     counter_km,
+    status,
     electric_assistance,
   } = bicycleData;
 
   const result = await db.query(
     `INSERT INTO bicycle (
         bicycle_type, brand, model, image, lifetime, price_per_day, revision_cycle,
-        last_km_service, counter_km, electric_assistance
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+        last_km_service, counter_km, status, electric_assistance
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
       RETURNING *`,
     [
       bicycle_type,
@@ -56,6 +57,7 @@ export const createBicycle = async (bicycleData) => {
       revision_cycle,
       last_km_service,
       counter_km,
+      status,
       electric_assistance,
     ],
   );
@@ -79,6 +81,7 @@ export const updateBicycle = async (id, bicycleData) => {
     revision_cycle,
     last_km_service,
     counter_km,
+    status,
     electric_assistance,
   } = bicycleData;
 
@@ -86,7 +89,7 @@ export const updateBicycle = async (id, bicycleData) => {
     `UPDATE bicycle SET 
             bicycle_type = $1, brand = $2, model = $3, image = $4, 
             lifetime = $5, price_per_day = $6, revision_cycle = $7, 
-            last_km_service = $8, counter_km = $9, electric_assistance = $10 WHERE bicycle_id = $11 RETURNING *`,
+            last_km_service = $8, counter_km = $9, electric_assistance = $10, status = $11 WHERE bicycle_id = $12 RETURNING *`,
     [
       bicycle_type,
       brand,
@@ -97,6 +100,7 @@ export const updateBicycle = async (id, bicycleData) => {
       revision_cycle,
       last_km_service,
       counter_km,
+      status,
       electric_assistance,
       id,
     ],
@@ -140,5 +144,10 @@ export const getAllModels = async () => {
 
 export const getAllTypes = async () => {
   const result = await db.query("SELECT DISTINCT bicycle_type FROM bicycle");
+  return result.rows;
+};
+
+export const getAllStatuses = async () => {
+  const result = await db.query("SELECT DISTINCT status FROM bicycle");
   return result.rows;
 };

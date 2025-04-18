@@ -36,12 +36,13 @@
                 
                 <v-btn
                 v-if="item.rental_status === 'En cours'"
-                @click="completeRental(item.rental_id)"
+                @click.stop="completeRental(item)"
                 color="green-darken-2"
                 variant="tonal"
                 size="x-small"
                 icon
                 rounded
+                :loading="item.loading"
                 >
                 <v-icon>mdi-check</v-icon>
                 <v-tooltip activator="parent" location="top">Marquer comme terminé</v-tooltip>
@@ -336,18 +337,30 @@
     };
   }
 
-  async function completeRental(rentalId) {
+    async function completeRental(item) {
     try {
-        await fetchData(`/rentals/${rentalId}`, {
+        const updatedItem = { 
+        ...item, 
+        rental_status: "Terminé" 
+        };
+        
+        // 1. Mise à jour via l'API
+        const result = await fetchData(`/rentals/${item.rental_id}`, {
         method: "PUT",
-        body: JSON.stringify({ rental_status: "Terminé" })
+        body: JSON.stringify(updatedItem)
         });
-        await loadRentals();
-    } 
-    catch (error) {
+
+        // 2. Mise à jour locale immédiate
+        const index = rentals.value.findIndex(r => r.rental_id === item.rental_id);
+        if (index !== -1) {
+        rentals.value[index] = { ...updatedItem, ...result };
+        }
+        
+    } catch (error) {
         console.error("Erreur:", error);
+        alert("Échec de la mise à jour");
+        }
     }
-  }
   </script>
   
   <style scoped lang="scss">
