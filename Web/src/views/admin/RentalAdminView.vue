@@ -74,6 +74,7 @@
         :subtitle="`${isEditing ? 'Modifier' : 'Créer'} une location`"
         :title="`${isEditing ? 'Édition' : 'Nouvelle location'}`"
       >
+
         <template v-slot:text>
           <v-row>
             <v-col cols="12">
@@ -82,6 +83,23 @@
               label="ID Compte"
               type="number">
               </v-text-field>
+            </v-col>
+
+            <v-col cols="12">
+              <v-select
+                v-model="record.bicycle_id"
+                :items="bicycles"
+                item-title="model"
+                item-value="bicycle_id"
+                label="Sélectionner un vélo"
+                required
+                multiple
+              >
+              <template v-slot:item="{ props: itemProps, item }">
+      <v-list-item v-bind="itemProps">
+        {{ item.raw.brand }} - {{ item.raw.model }} ({{item.raw.counter_km}}km)</v-list-item>
+    </template>
+            </v-select>
             </v-col>
   
             <v-col cols="12" md="6">
@@ -203,6 +221,7 @@
   const isEditing = ref(false);
   const rentals = ref([]);
   const record = ref(getEmptyRecord());
+  const bicycles = ref([])
   
   const { floatingStyles: startDatePickerStyles } = useFloating(
     startDateTrigger,
@@ -269,6 +288,7 @@
   ];
   
   // Chargement initial des données
+  loadBicycles();
   loadRentals();
   
   async function loadRentals() {
@@ -279,6 +299,15 @@
       console.error("Erreur de chargement:", error);
     }
   }
+
+  async function loadBicycles() {
+  try {
+    const data = await fetchData("/bicycles/");
+    bicycles.value = data;
+  } catch (error) {
+    console.error("Erreur de chargement des vélos:", error);
+  }
+}
   
   function add() {
     // Ouvre la modal et efface les champs
@@ -320,7 +349,7 @@
         await fetchData(`/rentals/${id}`, {
           method: "DELETE",
         });
-        await loadBicycles();
+        await loadRentals();
       } catch (error) {
         console.error("Erreur de suppression:", error);
       }
@@ -329,6 +358,7 @@
   
   function getEmptyRecord() {
     return {
+      bicycle_id: null,
       account_id: null,
       start_date: null,
       end_date: null,
