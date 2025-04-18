@@ -1,0 +1,30 @@
+{
+	"info": {
+		"_postman_id": "d2f96b7d-5a53-46fc-9946-838f955ed899",
+		"name": "filtesr",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43017204",
+		"_collection_link": "https://e99999-1164.postman.co/workspace/EasyRent~dcdfe9ef-d45e-49d7-acf9-dcc348223220/collection/43017204-d2f96b7d-5a53-46fc-9946-838f955ed899?action=share&source=collection_link&creator=43017204"
+	},
+	"item": [
+		{
+			"name": "GetAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/filters",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"filters"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

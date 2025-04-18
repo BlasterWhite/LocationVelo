@@ -99,7 +99,7 @@ npm run start
 
 5. **Tests API avec Postman**
 
-   - Un jeu de test complet est disponible dans le fichier postman.json à la racine du projet
+   - Un jeu de test complet est disponible dans le dossier Postman à la racine du projet
 
    - Importez la collection dans Postman :
 
@@ -107,7 +107,7 @@ npm run start
 
      2. Cliquez sur "Import" > "File"
 
-     3. Sélectionnez le fichier postman.json
+     3. Sélectionnez un fichier
 
    - Les tests couvrent les principales fonctionnalités de l'API
 

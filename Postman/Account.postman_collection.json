@@ -1,0 +1,156 @@
+{
+	"info": {
+		"_postman_id": "a485b625-e6cf-45a4-ab54-023eb541befd",
+		"name": "Account",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43017204",
+		"_collection_link": "https://e99999-1164.postman.co/workspace/EasyRent~dcdfe9ef-d45e-49d7-acf9-dcc348223220/collection/43017204-a485b625-e6cf-45a4-ab54-023eb541befd?action=share&source=collection_link&creator=43017204"
+	},
+	"item": [
+		{
+			"name": "GetAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/accounts",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImFjY291bnRfaWQiOjExLCJmaXJzdF9uYW1lIjoiSmhvbiIsImxhc3RfbmFtZSI6IkRlbyIsImVtYWlsIjoidGVzdEB0ZXN0LmNvIiwicGhvbmUiOiJOL0EiLCJhZGRyZXNzIjoiTi9BIiwiYWNjb3VudF9yb2xlIjoidXNlciIsInN1YnNjcmliZSI6ZmFsc2V9LCJpYXQiOjE3NDQ4MjQ5MTAsImV4cCI6MTc3NjM4MjUxMH0.z_TZYV5rEyNtVI9DPVgLyr8uKKrV_XxThx_NQnYxJXo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/accounts/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"accounts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/api/accounts",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"jo.doe@atat.us\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/api/accounts/6",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"accounts",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImFjY291bnRfaWQiOjExLCJmaXJzdF9uYW1lIjoiSmhvbiIsImxhc3RfbmFtZSI6IkRlbyIsImVtYWlsIjoidGVzdEB0ZXN0LmNvIiwicGhvbmUiOiJOL0EiLCJhZGRyZXNzIjoiTi9BIiwiYWNjb3VudF9yb2xlIjoidXNlciIsInN1YnNjcmliZSI6ZmFsc2V9LCJpYXQiOjE3NDQ4MjQ5MTAsImV4cCI6MTc3NjM4MjUxMH0.z_TZYV5rEyNtVI9DPVgLyr8uKKrV_XxThx_NQnYxJXo",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"first_name\": \"John\", \"last_name\": \"Doe\", \"email\": \"jo.doe@atat.us\", \"password\": \"Joe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/api/accounts/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"accounts",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

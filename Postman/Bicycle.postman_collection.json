@@ -1,0 +1,157 @@
+{
+	"info": {
+		"_postman_id": "d6e15bf5-6027-45f8-86bb-ee9d908affb3",
+		"name": "Bicycle",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43017204",
+		"_collection_link": "https://e99999-1164.postman.co/workspace/EasyRent~dcdfe9ef-d45e-49d7-acf9-dcc348223220/collection/43017204-d6e15bf5-6027-45f8-86bb-ee9d908affb3?action=share&source=collection_link&creator=43017204"
+	},
+	"item": [
+		{
+			"name": "GetAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/bicycles",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"bicycles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetByID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/bicycles/1",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"bicycles",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bicycle_type\": \"VTT\",\n    \"brand\": \"Ha\",\n    \"model\": \"Street\",\n    \"image\": \"https://placehold.co/600x400\",\n    \"lifetime\": \"2030-11-04T23:00:00.000Z\",\n    \"price_per_day\": \"25.00\",\n    \"revision_cycle\": 450,\n    \"last_km_service\": 250,\n    \"counter_km\": 350,\n    \"electric_assistance\": true\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/api/bicycles",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"bicycles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bicycle_type\": \"VTTTT\",\n    \"brand\": \"Ha\",\n    \"model\": \"Street\",\n    \"lifetime\": \"2030-11-04T23:00:00.000Z\",\n    \"revision_cycle\": 450,\n    \"last_km_service\": 80,\n    \"electric_assistance\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/api/bicycles/6",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"bicycles",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bicycle_type\": \"VTT\",\n    \"brand\": \"Ha\",\n    \"model\": \"Street\",\n    \"lifetime\": \"2030-11-04T23:00:00.000Z\",\n    \"revision_cycle\": 450,\n    \"last_km_service\": 80,\n    \"status\": \"Maintenance\",\n    \"electric_assistance\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3001/api/bicycles/8",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"bicycles",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetAvailableBicyclesOnPeriod",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3001/api/bicycles/2023-06-06/2023-07-06",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"api",
+						"bicycles",
+						"2023-06-06",
+						"2023-07-06"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
