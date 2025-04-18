@@ -303,12 +303,8 @@ export const deleteRentalAssociation = async (req, res) => {
  */
 export const deleteRentalAssociationsByRentalId = async (req, res) => {
   const rentalId = req.params.rentalId;
-  console.log(rentalId);
 
-  const deleted = await rentalModel.deleteRentalByRentalId(rentalId);
-  if (!deleted) {
-    res.status(500).send("Internal Server Error");
-    return;
-  }
-  res.status(204).send();
+  rentalModel.deleteRentalByRentalId(rentalId);
+ 
+  res.status(204).json({});
 };

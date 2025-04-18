@@ -330,11 +330,37 @@
           method: "PUT",
           body: JSON.stringify(record.value),
         });
+
+        // Supprimer toute les rental association
+        await fetchData(`/rentals/associate/${record.value.rental_id}`, {
+          method: "DELETE",
+        });
+
+        // Créer les nouvelles rentals association (ForEach(record.bike_id, record.rental.id))
+        record.value.bicycle_id.forEach(async (bikeId) => {
+          await fetchData("/rentals/associate", {
+            method: "POST",
+            body: JSON.stringify({ bikeId, rentalId: record.value.rental_id }),
+          });
+        });
       } else {
         await fetchData("/rentals", {
           method: "POST",
           body: JSON.stringify(record.value),
         });
+
+        await fetchData(`/rentals/associate/${record.value.rental_id}`, {
+          method: "DELETE",
+        });
+
+        console.log(record.value.bicycle_id);
+        record.value.bicycle_id.forEach(async (bikeId) => {
+          await fetchData("/rentals/associate", {
+            method: "POST",
+            body: JSON.stringify({ bikeId, rentalId: record.value.rental_id }),
+          });
+        });
+
       }
       await loadRentals();
       dialog.value = false;
