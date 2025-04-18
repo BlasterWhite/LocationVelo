@@ -1,20 +1,19 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
-    <div class="assistance-view"> 
-        <div class="left_side">
-        </div>
+  <div class="assistance-view">
+    <div class="left_side"></div>
 
-        <div class="right_side">
-            <h1> <v-icon icon="mdi mdi-headset" size="large"></v-icon><strong> Assistance </strong></h1>
-            <br>
-            <p>Vous avez besoin d'aide ? Contactez nous !</p>
-            <p>+33 (0)2 96 12 64 56 </p>
-
-        </div>
+    <div class="right_side">
+      <h1>
+        <v-icon icon="mdi mdi-headset" size="large"></v-icon
+        ><strong> Assistance </strong>
+      </h1>
+      <br />
+      <p>Vous avez besoin d'aide ? Contactez nous !</p>
+      <p>+33 (0)2 96 12 64 56</p>
     </div>
+  </div>
 </template>
 
 <style lang="scss" scoped>
@@ -36,8 +35,6 @@
 }
 
 .right_side {
-
   background-color: #f0f0f0;
 }
 </style>
-
