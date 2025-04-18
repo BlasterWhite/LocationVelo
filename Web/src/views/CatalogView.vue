@@ -55,12 +55,17 @@ useFetch()
   });
 
 const startDate = ref(
-  route.query.startDate ? new Date(route.query.startDate) : null,
+  route.query.startDate ? new Date(route.query.startDate) : new Date(),
 );
-const endDate = ref(route.query.endDate ? new Date(route.query.endDate) : null);
+const endDate = ref(
+  route.query.endDate
+    ? new Date(route.query.endDate)
+    : new Date(startDate.value.getTime() + 24 * 60 * 60 * 1000),
+);
 
 const filterDisplayOpt = ref({
   search: true,
+  date: true,
   price: true,
   brand: true,
   model: true,
@@ -71,6 +76,8 @@ const filterDisplayOpt = ref({
 
 const filterData = ref({
   searchText: "",
+  startDate: startDate.value,
+  endDate: endDate.value,
   priceRange: [0, 35],
   electricAssistance: false,
   brandSelected: [],
@@ -205,7 +212,15 @@ const groupedCart = computed(() => {
 watch(
   () => filterData.value,
   (newValue) => {
-    calculateBicycles();
+    useFetch()
+      .fetchData(`/bicycles/${new Date(newValue.startDate).toISOString().split("T")[0]}/${new Date(newValue.endDate).toISOString().split("T")[0]}`)
+      .then((data) => {
+        bicyclesData.value = data;
+        calculateBicycles();
+      })
+      .catch((error) => {
+        console.error("Error fetching bicycles:", error);
+      });
   },
   { deep: true },
 );
