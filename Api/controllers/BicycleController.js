@@ -172,3 +172,33 @@ export const deleteBicycle = async (req, res) => {
 
   res.status(204).send();
 };
+
+export const getAvailableBicycleInPeriod = async (req, res) => {
+  const startDate = req.params.startDate;
+  const endDate = req.params.endDate;
+
+  if (!startDate || !endDate) {
+    res.status(400).send("Start date and end date are required");
+    return;
+  }
+
+  // Check date format
+  if (
+    !/^2[0-9]{3}-[0-9]{2}-[0-9]{2}$/.test(startDate) ||
+    !/^2[0-9]{3}-[0-9]{2}-[0-9]{2}$/.test(endDate)
+  ) {
+    res.status(400).send("Bad date format");
+  }
+
+  const available = await bicycleModel.getAvailableBicyclesOnPeriod(
+    startDate,
+    endDate
+  );
+
+  if (!available || available.length === 0) {
+    res.status(404).send("Bicycle not found");
+    return;
+  }
+
+  res.json(available);
+};
