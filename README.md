@@ -29,7 +29,7 @@ cd Web
 npm install
 
 # Backend (API)
-cd ../API
+cd ../Api
 npm install
 
 # Retour à la racine
@@ -46,7 +46,7 @@ cd ..
 
    ```bash
    cp Web/.env.example Web/.env
-   cp API/.env.example API/.env
+   cp Api/.env.example Api/.env
    ```
 
    - Adaptez les variables dans chaque fichier `.env` selon vos besoins
@@ -75,7 +75,7 @@ npm run dev
 Backend (API) :
 
 ```bash
-cd ../API
+cd ../Api
 npm run dev
 ```
 
@@ -87,13 +87,13 @@ Frontend :
 
 ```bash
 cd Web
-npm run start
+npm run dev
 ```
 
 Backend :
 
 ```bash
-cd ../API
+cd ../Api
 npm run start
 ```
 
