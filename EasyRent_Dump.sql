@@ -273,3 +273,7 @@ VALUES (1, 2),
 	(4, 3),
 	(5, 4),
 	(6, 5);
+CREATE VIEW newsletter_subscribers AS
+SELECT *
+FROM account
+where subscribe = true;

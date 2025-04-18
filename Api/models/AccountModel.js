@@ -150,7 +150,7 @@ export const _getAccountByEmailPrivate = async (email) => {
  */
 export const getAccountNewsletter = async () => {
   const result = await db.query(
-    `SELECT ${fieldsToSelect.join(",")} FROM account WHERE subscribe = true`
+    `SELECT ${fieldsToSelect.join(",")} FROM newsletter_subscribers`
   );
   return result.rows;
 };
