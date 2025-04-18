@@ -1,6 +1,6 @@
 <template>
   <div class="newsletter-view">
-    <h2>Envoie de newsletter</h2>
+    <h2>Envoi de newsletter</h2>
     <v-textarea
       v-model="newsletterContent"
       label="Contenu de la newsletter"
