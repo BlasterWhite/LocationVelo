@@ -20,7 +20,7 @@ export const getRentals = async (req, res) => {
     // si la location n'est pas présente dans le tableau mergedRentals
     if (
       !mergedRentals.find(
-        (mergedRental) => mergedRental.rental_id === rental.rental_id,
+        (mergedRental) => mergedRental.rental_id === rental.rental_id
       )
     ) {
       mergedRentals.push({
@@ -36,7 +36,7 @@ export const getRentals = async (req, res) => {
 
     if (rental.bicycle_id !== null) {
       const index = mergedRentals.findIndex(
-        (mergedRental) => mergedRental.rental_id === rental.rental_id,
+        (mergedRental) => mergedRental.rental_id === rental.rental_id
       );
       mergedRentals[index].bicycles.push({
         bicycle_id: rental.bicycle_id,
@@ -62,6 +62,29 @@ export const getRentals = async (req, res) => {
  * @param {Object} res - The express response object
  * @returns {void}
  */
+
+export const getRentalAssociationByRentalId = async (req, res) => {
+  const rentalId = req.params.rental_id;
+  if(!rentalId) {
+    res.status(400).send("Rental id not provided");
+    return;
+  }
+  const rentalAssociation = await rentalModel.getRentalAssociationByRentalId(rentalId);
+  if (!rentalAssociation || rentalAssociation.length === 0) {
+    res.status(404).send("Rental association not found");
+    return;
+  }
+  
+  res.json(rentalAssociation);
+}
+
+/**
+ * Get a rental by its id
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+
 export const getRentalById = async (req, res) => {
   const rentalId = req.params.id;
   if (!rentalId) {
@@ -125,7 +148,7 @@ export const createRental = async (req, res) => {
     res
       .status(400)
       .send(
-        "Account ID, start date, end date, payment status, and rental status are required",
+        "Account ID, start date, end date, payment status, and rental status are required"
       );
     return;
   }
@@ -164,13 +187,23 @@ export const createRentalAssociation = async (req, res) => {
     return;
   }
   const rental = await rentalModel.getRentalById(rental_id);
-  if (!rental) {
+  if (!rental || rental.length == 0) {
     res.status(404).send("Rental not found");
     return;
   }
   const bicycle = await bicycleModel.getBicycleById(bicycle_id);
   if (!bicycle) {
     res.status(404).send("Bicycle not found");
+    return;
+  }
+
+  const rentalUnavailable = await rentalModel.getAllUnavailableRentalsByDate(
+    bicycle_id,
+    rental[0].start_date,
+    rental[0].end_date
+  );
+  if (rentalUnavailable.length > 0) {
+    res.status(400).send("Bicycle is unavailable");
     return;
   }
 
@@ -268,7 +301,7 @@ export const deleteRentalAssociation = async (req, res) => {
 
   const rentalAssociation = await rentalModel.getRentalAssociationByIds(
     rental_id,
-    bicycle_id,
+    bicycle_id
   );
   if (!rentalAssociation || rentalAssociation.length === 0) {
     res.status(404).send("Rental association not found");
@@ -276,7 +309,7 @@ export const deleteRentalAssociation = async (req, res) => {
   }
   const deleted = await rentalModel.deleteRentalAssociation(
     rental_id,
-    bicycle_id,
+    bicycle_id
   );
   if (!deleted) {
     res.status(500).send("Internal Server Error");
@@ -284,3 +317,18 @@ export const deleteRentalAssociation = async (req, res) => {
   }
   res.status(204).send();
 };
+
+/**
+ * Delete rental associations by its rental id
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+export const deleteRentalAssociationsByRentalId = async (req, res) => {
+  const rentalId = req.params.rentalId;
+
+  rentalModel.deleteRentalByRentalId(rentalId);
+ 
+  res.status(204).json({});
+};
+

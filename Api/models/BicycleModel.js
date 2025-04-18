@@ -37,14 +37,15 @@ export const createBicycle = async (bicycleData) => {
     revision_cycle,
     last_km_service,
     counter_km,
+    status,
     electric_assistance,
   } = bicycleData;
 
   const result = await db.query(
     `INSERT INTO bicycle (
         bicycle_type, brand, model, image, lifetime, price_per_day, revision_cycle,
-        last_km_service, counter_km, electric_assistance
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) 
+        last_km_service, counter_km, status, electric_assistance
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
       RETURNING *`,
     [
       bicycle_type,
@@ -56,8 +57,9 @@ export const createBicycle = async (bicycleData) => {
       revision_cycle,
       last_km_service,
       counter_km,
+      status,
       electric_assistance,
-    ],
+    ]
   );
   return result.rows[0];
 };
@@ -79,6 +81,7 @@ export const updateBicycle = async (id, bicycleData) => {
     revision_cycle,
     last_km_service,
     counter_km,
+    status,
     electric_assistance,
   } = bicycleData;
 
@@ -86,7 +89,7 @@ export const updateBicycle = async (id, bicycleData) => {
     `UPDATE bicycle SET 
             bicycle_type = $1, brand = $2, model = $3, image = $4, 
             lifetime = $5, price_per_day = $6, revision_cycle = $7, 
-            last_km_service = $8, counter_km = $9, electric_assistance = $10 WHERE bicycle_id = $11 RETURNING *`,
+            last_km_service = $8, counter_km = $9, electric_assistance = $10, status = $11 WHERE bicycle_id = $12 RETURNING *`,
     [
       bicycle_type,
       brand,
@@ -97,9 +100,10 @@ export const updateBicycle = async (id, bicycleData) => {
       revision_cycle,
       last_km_service,
       counter_km,
+      status,
       electric_assistance,
       id,
-    ],
+    ]
   );
   return result.rows[0]; // Return the updated bicycle
 };
@@ -112,7 +116,7 @@ export const updateBicycle = async (id, bicycleData) => {
 export const deleteBicycle = async (id) => {
   const result = await db.query(
     "DELETE FROM bicycle WHERE bicycle_id = $1 RETURNING *",
-    [id],
+    [id]
   );
   return result.rowCount > 0; // Returns true if a row was deleted
 };
@@ -123,7 +127,7 @@ export const deleteBicycle = async (id) => {
  */
 export const getBicyclePricing = async () => {
   const result = await db.query(
-    "SELECT MAX(price_per_day) AS max_price, MIN(price_per_day) AS min_price, AVG(price_per_day) AS avg_price FROM bicycle",
+    "SELECT MAX(price_per_day) AS max_price, MIN(price_per_day) AS min_price, AVG(price_per_day) AS avg_price FROM bicycle"
   );
   return result.rows;
 };
@@ -179,5 +183,11 @@ export const getAvailableBicyclesOnPeriod = async (startDate, endDate) => {
     )`,
     [startDate, endDate]
   );
+
+  return result.rows;
+};
+
+export const getAllStatuses = async () => {
+  const result = await db.query("SELECT DISTINCT status FROM bicycle");
   return result.rows;
 };

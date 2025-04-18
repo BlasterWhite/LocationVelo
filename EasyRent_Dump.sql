@@ -16,6 +16,7 @@ CREATE TABLE bicycle(
 	revision_cycle INTEGER NOT NULL,
 	last_km_service INTEGER NOT NULL DEFAULT 0,
 	counter_km INTEGER NOT NULL DEFAULT 0,
+	status VARCHAR NOT NULL DEFAULT 'Disponible',
 	electric_assistance BOOLEAN NOT NULL DEFAULT false,
 	CONSTRAINT pk_bicycle PRIMARY KEY (bicycle_id)
 );
@@ -84,6 +85,7 @@ INSERT INTO bicycle (
 		revision_cycle,
 		last_km_service,
 		counter_km,
+		status,
 		electric_assistance
 	)
 VALUES (
@@ -96,6 +98,7 @@ VALUES (
 		500,
 		100,
 		250,
+		'Réservé',
 		false
 	),
 	(
@@ -108,6 +111,7 @@ VALUES (
 		1000,
 		200,
 		600,
+		'Réservé',
 		DEFAULT
 	),
 	(
@@ -119,6 +123,7 @@ VALUES (
 		'https://hepha.com/cdn/shop/files/HEPHA_MY24_Trekking7_Performance_StepThrough_1_736929d3-5980-4b92-90f4-b3a5938884f5.png?v=1711108614',
 		750,
 		0,
+		DEFAULT,
 		DEFAULT,
 		false
 	),
@@ -132,6 +137,7 @@ VALUES (
 		600,
 		DEFAULT,
 		0,
+		'Maintenance',
 		true
 	),
 	(
@@ -144,6 +150,7 @@ VALUES (
 		450,
 		80,
 		400,
+		'Maintenance',
 		false
 	);
 -- Insertion dans la table account

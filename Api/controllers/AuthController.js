@@ -85,7 +85,7 @@ export const register = async (req, res) => {
     hashedPassword,
     phone: phone || "N/A",
     address: address || "N/A",
-    account_role: "user",
+    account_role: "client",
     subscribe: subscribe || false,
   };
 

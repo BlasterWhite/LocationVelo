@@ -52,6 +52,7 @@ export const createBicycle = async (req, res) => {
     revision_cycle,
     last_km_service,
     counter_km,
+    status,
     electric_assistance,
   } = req.body || {};
 
@@ -65,6 +66,7 @@ export const createBicycle = async (req, res) => {
   }
 
   last_km_service = last_km_service || 0;
+  status = status || "Disponible";
   counter_km = counter_km || 0;
   price_per_day = price_per_day || 20.0;
   image = image || "https://placehold.co/600x400";
@@ -79,6 +81,7 @@ export const createBicycle = async (req, res) => {
     price_per_day,
     revision_cycle,
     last_km_service,
+    status,
     counter_km,
     electric_assistance,
   });
@@ -119,6 +122,7 @@ export const updateBicycle = async (req, res) => {
     revision_cycle,
     last_km_service,
     counter_km,
+    status,
     electric_assistance,
   } = req.body || {};
 
@@ -132,6 +136,7 @@ export const updateBicycle = async (req, res) => {
     revision_cycle: revision_cycle || bicycle.revision_cycle,
     last_km_service: last_km_service || bicycle.last_km_service,
     counter_km: counter_km || bicycle.counter_km,
+    status: status || bicycle.status,
     electric_assistance: electric_assistance || bicycle.electric_assistance,
   };
   const updatedBicycle = await bicycleModel.updateBicycle(

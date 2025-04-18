@@ -28,8 +28,8 @@ const isAdmin = computed(() => {
     <div class="left">
       <router-link to="/" class="logo">
         <p class="logo-text">
-          <span class="first-part">Easy</span>
-          <span class="second-part">Rent</span>
+          <span class="first-part">Loca</span>
+          <span class="second-part">Vélo</span>
         </p>
       </router-link>
     </div>
