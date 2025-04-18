@@ -29,6 +29,9 @@ function test() {
       <router-link to="/admin/locations">
         <v-btn>Gestion des locations</v-btn>
       </router-link>
+      <router-link to="/admin/newsletter">
+        <v-btn>Newsletter</v-btn>
+      </router-link>
     </div>
     <router-view />
   </div>

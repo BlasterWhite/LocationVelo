@@ -11,6 +11,7 @@ import authRoute from "./routes/AuthRoute.js";
 import filterRoute from "./routes/FilterRoute.js";
 import rentalRouter from "./routes/RentalRoute.js";
 import reviewRouter from "./routes/ReviewRoute.js";
+import newsletterRouter from "./routes/NewsletterRoute.js";
 import cors from "cors";
 
 const app = express();
@@ -34,6 +35,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/rentals", rentalRouter);
 app.use("/api/reviews", reviewRouter);
 app.use("/api/filters", filterRoute);
+app.use("/api/newsletter", newsletterRouter);
 
 db.connect((err) => {
   if (err) {

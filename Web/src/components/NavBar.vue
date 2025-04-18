@@ -62,7 +62,7 @@ const isAdmin = computed(() => {
         </v-list-item>
       </router-link>
 
-      <router-link to="/reservations">
+      <router-link to="/booking">
         <v-list-item @click="showFloatingMenu = false">
           <v-list-item-title>Mes Réservations</v-list-item-title>
         </v-list-item>

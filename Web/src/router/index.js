@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import AccountView from "../views/AccountView.vue";
+import BookingView from "../views/BookingView.vue";
 import CatalogView from "../views/CatalogView.vue";
 import AboutView from "../views/AboutView.vue";
 import DebugView from "../views/DebugView.vue";
@@ -11,6 +12,7 @@ import AdminView from "../views/AdminView.vue";
 import AdminBicyclesView from "../views/admin/BicycleAdminView.vue";
 import AdminAccountView from "../views/admin/AccountAdminView.vue";
 import AdminLocationsView from "../views/admin/RentalAdminView.vue";
+import NewsletterAdminView from "../views/admin/NewsletterAdminView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -47,6 +49,14 @@ const router = createRouter({
       path: "/debug",
       name: "debug",
       component: DebugView,
+    },
+    {
+      path: "/booking",
+      name: "booking",
+      component: BookingView,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: "/about",
@@ -86,6 +96,14 @@ const router = createRouter({
           path: "locations",
           name: "admin-locations",
           component: AdminLocationsView,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: "newsletter",
+          name: "admin-newsletter",
+          component: NewsletterAdminView,
           meta: {
             requiresAuth: true,
           },
