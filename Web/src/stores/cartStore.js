@@ -19,8 +19,7 @@ export const useCartStore = defineStore("cart", {
         throw new Error("Veuillez sélectionner des dates de location");
       }
 
-      console.log(JSON.stringify(bicycle));
-      console.log(JSON.stringify(this.startDate));
+// Removed unnecessary console.log statements used for debugging.
 
       const existing = this.items.find(
         (item) => item.id === bicycle.bicycle_id,
