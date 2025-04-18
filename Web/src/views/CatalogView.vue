@@ -15,9 +15,13 @@ route.query.startDate = route.query.startDate
   : null;
 
 const startDate = ref(
-  route.query.startDate ? new Date(route.query.startDate) : null,
+  route.query.startDate ? new Date(route.query.startDate) : new Date(),
 );
-const endDate = ref(route.query.endDate ? new Date(route.query.endDate) : null);
+const endDate = ref(
+  route.query.endDate
+    ? new Date(route.query.endDate)
+    : new Date(startDate.value.getTime() + 24 * 60 * 60 * 1000),
+);
 
 async function getFilters() {
   const filters = await useFetch().fetchData("/filters");

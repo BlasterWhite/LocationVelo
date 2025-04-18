@@ -70,11 +70,9 @@ const headers = [
 ];
 
 const submitReview = async () => {
-  console.log("Submitting review...");
   debugger;
 
   if (rating.value === 0) {
-    alert("Veuillez donner une note");
     return;
   }
 
