@@ -326,6 +326,8 @@ function add() {
 
 function edit(item) {
   // Ouvre la modal et remplit les champs avec les données de l'élément sélectionné
+
+
   isEditing.value = true;
   record.value = { ...item };
   dialog.value = true;
@@ -365,10 +367,6 @@ async function save() {
       await fetchData("/rentals", {
         method: "POST",
         body: JSON.stringify(record.value),
-      });
-
-      await fetchData(`/rentals/associate/${record.value.rental_id}`, {
-        method: "DELETE",
       });
 
       console.log(record.value.bicycle_id);

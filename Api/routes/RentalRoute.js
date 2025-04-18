@@ -8,6 +8,7 @@ import {
   deleteRental,
   deleteRentalAssociation,
   deleteRentalAssociationsByRentalId,
+  getRentalAssociationByRentalId,
 } from "../controllers/RentalController.js";
 
 const router = express.Router();
@@ -18,6 +19,8 @@ router.get("/", getRentals);
 router.get("/:id", getRentalById);
 // Route to create a new rental association
 router.post("/associate", createRentalAssociation);
+// Route to get all association from the rental ID
+router.get("/associate/:rentalId", getRentalAssociationByRentalId);
 // Route to create a new rental
 router.post("/", createRental);
 // Route to update a rental by ID

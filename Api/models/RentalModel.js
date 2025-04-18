@@ -168,3 +168,16 @@ export const deleteRentalByRentalId = async (rental_id) => {
   );
   return result.rowCount > 0; // Return true if a row was deleted
 };
+
+/**
+ * Get rental association from rental id
+ * @param {Number} rental_id id of the rental
+ * @returns {Array}
+ */
+export const getRentalAssociationByRentalId = async (rental_id) => {
+  const result = await db.query(
+    `SELECT * FROM rental_association WHERE rental_id = $1`,
+    [rental_id]
+  );
+  return result.rows; // Return true if a row was deleted
+};

@@ -62,6 +62,29 @@ export const getRentals = async (req, res) => {
  * @param {Object} res - The express response object
  * @returns {void}
  */
+
+export const getRentalAssociationByRentalId = async (req, res) => {
+  const rentalId = req.params.rental_id;
+  if(!rentalId) {
+    res.status(400).send("Rental id not provided");
+    return;
+  }
+  const rentalAssociation = await rentalModel.getRentalAssociationByRentalId(rentalId);
+  if (!rentalAssociation || rentalAssociation.length === 0) {
+    res.status(404).send("Rental association not found");
+    return;
+  }
+  
+  res.json(rentalAssociation);
+}
+
+/**
+ * Get a rental by its id
+ * @param {Object} req - The express request object
+ * @param {Object} res - The express response object
+ * @returns {void}
+ */
+
 export const getRentalById = async (req, res) => {
   const rentalId = req.params.id;
   if (!rentalId) {
@@ -308,3 +331,4 @@ export const deleteRentalAssociationsByRentalId = async (req, res) => {
  
   res.status(204).json({});
 };
+
