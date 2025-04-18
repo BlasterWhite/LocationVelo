@@ -2,6 +2,7 @@ import express from "express";
 import {
   getRentals,
   getRentalById,
+  getRentalByAccountId,
   createRental,
   createRentalAssociation,
   updateRental,
@@ -13,6 +14,8 @@ const router = express.Router();
 
 // Route to get all rentals
 router.get("/", getRentals);
+// Route to get all rentals by account ID
+router.get("/account", getRentalByAccountId);
 // Route to get a rental by ID
 router.get("/:id", getRentalById);
 // Route to create a new rental association
