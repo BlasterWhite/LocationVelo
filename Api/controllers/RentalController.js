@@ -1,6 +1,7 @@
 import * as rentalModel from "../models/RentalModel.js";
 import * as accountModel from "../models/AccountModel.js";
 import * as bicycleModel from "../models/BicycleModel.js";
+import * as reviewModel from "../models/ReviewModel.js";
 
 /**
  * Get all rentals
@@ -20,7 +21,7 @@ export const getRentals = async (req, res) => {
     // si la location n'est pas présente dans le tableau mergedRentals
     if (
       !mergedRentals.find(
-        (mergedRental) => mergedRental.rental_id === rental.rental_id,
+        (mergedRental) => mergedRental.rental_id === rental.rental_id
       )
     ) {
       mergedRentals.push({
@@ -36,7 +37,7 @@ export const getRentals = async (req, res) => {
 
     if (rental.bicycle_id !== null) {
       const index = mergedRentals.findIndex(
-        (mergedRental) => mergedRental.rental_id === rental.rental_id,
+        (mergedRental) => mergedRental.rental_id === rental.rental_id
       );
       mergedRentals[index].bicycles.push({
         bicycle_id: rental.bicycle_id,
@@ -125,7 +126,7 @@ export const createRental = async (req, res) => {
     res
       .status(400)
       .send(
-        "Account ID, start date, end date, payment status, and rental status are required",
+        "Account ID, start date, end date, payment status, and rental status are required"
       );
     return;
   }
@@ -268,7 +269,7 @@ export const deleteRentalAssociation = async (req, res) => {
 
   const rentalAssociation = await rentalModel.getRentalAssociationByIds(
     rental_id,
-    bicycle_id,
+    bicycle_id
   );
   if (!rentalAssociation || rentalAssociation.length === 0) {
     res.status(404).send("Rental association not found");
@@ -276,11 +277,47 @@ export const deleteRentalAssociation = async (req, res) => {
   }
   const deleted = await rentalModel.deleteRentalAssociation(
     rental_id,
-    bicycle_id,
+    bicycle_id
   );
   if (!deleted) {
     res.status(500).send("Internal Server Error");
     return;
   }
   res.status(204).send();
+};
+
+export const getRentalByAccountId = async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
+  const accountId = user.account_id;
+
+  const rentals = await rentalModel.getRentalByAccountId(accountId);
+  if (!rentals || rentals.length === 0) {
+    res.status(404).send("Rentals not found");
+    return;
+  }
+
+  // Get rentals associated bicycles
+  for (const rental of rentals) {
+    let rentalAssociations = await rentalModel.getRentalAssociationByRentalId(
+      rental.rental_id
+    );
+    let review = await reviewModel.getReviewsByRentalId(rental.rental_id);
+    rental.review = review ? review : null;
+    rental.bicycles = [];
+    for (const rentalAssociation of rentalAssociations) {
+      const bicycle = await bicycleModel.getBicycleById(
+        rentalAssociation.bicycle_id
+      );
+      if (bicycle) {
+        rental.bicycles.push(bicycle);
+      }
+    }
+  }
+
+  res.json(rentals);
 };

@@ -194,7 +194,7 @@ export const getAvailableBicycleInPeriod = async (req, res) => {
     startDate,
     endDate
   );
-
+  
   if (!available || available.length === 0) {
     res.status(404).send("Bicycle not found");
     return;

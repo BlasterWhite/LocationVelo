@@ -4,6 +4,7 @@ import LoginView from "../views/LoginView.vue";
 import RegisterView from "../views/RegisterView.vue";
 import AccountView from "../views/AccountView.vue";
 import CatalogView from "../views/CatalogView.vue";
+import BookingView from "../views/BookingView.vue";
 import AboutView from "../views/AboutView.vue";
 import DebugView from "../views/DebugView.vue";
 import AssistanceView from "../views/AssistanceView.vue";
@@ -42,6 +43,14 @@ const router = createRouter({
       path: "/catalog",
       name: "catalog",
       component: CatalogView,
+    },
+    {
+      path: "/booking",
+      name: "booking",
+      component: BookingView,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: "/debug",
