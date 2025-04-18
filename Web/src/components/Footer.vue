@@ -1,5 +1,4 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
   <footer class="app-footer">
@@ -8,7 +7,7 @@
       <div class="footer-section">
         <h3>À propos</h3>
         <p>
-          Nous sommes une entreprise de location de vélos qui propose différents 
+          Nous sommes une entreprise de location de vélos qui propose différents
           modèles et marques pour tous les âges.
         </p>
       </div>
@@ -77,7 +76,7 @@
 /* ----- Chaque section du footer (À propos, Liens rapides, etc.) ----- */
 .footer-section {
   flex: 1 1 200px; /* Largeur minimale 200px, puis s'étire */
-  min-width: 200px; 
+  min-width: 200px;
 }
 
 /* Titre de section */
@@ -122,7 +121,7 @@
 }
 
 .social-icons a {
-  color: #ffffff; 
+  color: #ffffff;
   font-size: 1.2rem;
   transition: color 0.2s ease-in-out;
 }
